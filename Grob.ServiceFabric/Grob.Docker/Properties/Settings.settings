@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Grob.Docker.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DockerUri" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">npipe://./pipe/docker_engine</Value>
+    </Setting>
+    <Setting Name="DockerEmail" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">testemail</Value>
+    </Setting>
+    <Setting Name="DockerUsername" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">testusername</Value>
+    </Setting>
+    <Setting Name="DockerPassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">testpassword</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
