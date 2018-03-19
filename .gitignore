@@ -15,7 +15,7 @@ database/**/*.jfm
 *.userprefs
 
 # Build results
-#[Dd]ebug/
+[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -247,9 +247,3 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-/Database/portal_gateway/portal_gateway.jfm
-/Database/portal_management/portal_management.jfm
-/Database/portal_organization/portal_organization.jfm
-/Database/portal_socialnetwork/portal_socialnetwork.jfm
-/Database/oneclick/oneclick.jfm
-/Tools/VS2017/createAzureDb2017/Properties/PublishProfiles/FunctionApp20170821115044 - Web Deploy.pubxml
