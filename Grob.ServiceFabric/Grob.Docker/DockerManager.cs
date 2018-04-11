@@ -8,38 +8,39 @@ using System.Threading.Tasks;
 
 namespace Grob.Docker
 {
-	public class DockerManager
-	{
-		private DockerClient _dockerClient;
+    public class DockerManager
+    {
+        private DockerClient _dockerClient;
 
-		public DockerManager()
-		{
-			// local docker
-			DockerClientConfiguration dockerClientConfiguration = new DockerClientConfiguration(new Uri(DockerSettings.DockerUri));
-			_dockerClient = dockerClientConfiguration.CreateClient();
-		}
+        public DockerManager()
+        {
+            // local docker
+            DockerClientConfiguration dockerClientConfiguration = new DockerClientConfiguration(new Uri(DockerSettings.DockerUri));
+            _dockerClient = dockerClientConfiguration.CreateClient();
+        }
 
-		public IList<ContainerListResponse> ListContainers()
-		{
-			var parameters = new ContainersListParameters()
-			{				
-			};
+        public IList<ContainerListResponse> ListContainers()
+        {
+            var parameters = new ContainersListParameters()
+            {
+                All = true
+            };
 
-			var containers = _dockerClient.Containers.ListContainersAsync(parameters).Result;
+            var containers = _dockerClient.Containers.ListContainersAsync(parameters).Result;
 
-			return containers;
-		}
+            return containers;
+        }
 
-		public IList<ImagesListResponse> ListImages()
-		{
-			var parameters = new ImagesListParameters()
-			{
-				All = true
-			};
+        public IList<ImagesListResponse> ListImages()
+        {
+            var parameters = new ImagesListParameters()
+            {
+                All = true
+            };
 
-			var images = _dockerClient.Images.ListImagesAsync(parameters).Result;
+            var images = _dockerClient.Images.ListImagesAsync(parameters).Result;
 
-			return images;
-		}
-	}
+            return images;
+        }
+    }
 }

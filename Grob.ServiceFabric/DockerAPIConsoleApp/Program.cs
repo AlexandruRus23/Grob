@@ -28,7 +28,7 @@ namespace DockerAPIConsoleApp
 
 			foreach(var image in imagesList)
 			{
-				Console.WriteLine($"Image: {image.ID}. Created: {image.Created}");
+				Console.WriteLine($"Image: {image.RepoTags.FirstOrDefault()}. Created: {image.Created}");
 			}
 
 			Console.ReadKey();
