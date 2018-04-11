@@ -1,19 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="Grob.ServiceFabricType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
-    <Parameter Name="Grob.Test_InstanceCount" DefaultValue="-1" />
-    <Parameter Name="Grob.WebAPI_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="Grob.ServiceFabric.Agent_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="Grob.Scheduler_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="Grob.Scheduler_PartitionCount" DefaultValue="1" />
+    <Parameter Name="Grob.Scheduler_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="Grob.Web_InstanceCount" DefaultValue="-1" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="Grob.TestPkg" ServiceManifestVersion="1.0.0" />
+    <ServiceManifestRef ServiceManifestName="Grob.ServiceFabric.AgentPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
   </ServiceManifestImport>
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="Grob.WebAPIPkg" ServiceManifestVersion="1.0.0" />
+    <ServiceManifestRef ServiceManifestName="Grob.SchedulerPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
   </ServiceManifestImport>
   <ServiceManifestImport>
@@ -26,15 +28,15 @@
          ServiceFabric PowerShell module.
          
          The attribute ServiceTypeName below must match the name defined in the imported ServiceManifest.xml file. -->
-    <Service Name="Grob.Test" ServicePackageActivationMode="ExclusiveProcess">
-      <StatelessService ServiceTypeName="Grob.TestType" InstanceCount="[Grob.Test_InstanceCount]">
+    <Service Name="Grob.ServiceFabric.Agent" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="Grob.ServiceFabric.AgentType" InstanceCount="[Grob.ServiceFabric.Agent_InstanceCount]">
         <SingletonPartition />
       </StatelessService>
     </Service>
-    <Service Name="Grob.WebAPI" ServicePackageActivationMode="ExclusiveProcess">
-      <StatelessService ServiceTypeName="Grob.WebAPIType" InstanceCount="[Grob.WebAPI_InstanceCount]">
-        <SingletonPartition />
-      </StatelessService>
+    <Service Name="Grob.Scheduler" ServicePackageActivationMode="ExclusiveProcess">
+      <StatefulService ServiceTypeName="Grob.SchedulerType" TargetReplicaSetSize="[Grob.Scheduler_TargetReplicaSetSize]" MinReplicaSetSize="[Grob.Scheduler_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[Grob.Scheduler_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
     </Service>
     <Service Name="Grob.Web" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="Grob.WebType" InstanceCount="[Grob.Web_InstanceCount]">

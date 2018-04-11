@@ -32,8 +32,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Grob.Test\Grob.Test.csproj" />
-    <ProjectReference Include="..\Grob.WebAPI\Grob.WebAPI.csproj" />
+    <ProjectReference Include="..\Grob.Scheduler\Grob.Scheduler.csproj" />
+    <ProjectReference Include="..\Grob.ServiceFabric.Agent\Grob.ServiceFabric.Agent.csproj" />
     <ProjectReference Include="..\Grob.Web\Grob.Web.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

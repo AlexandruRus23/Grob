@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace Grob.Test
+namespace Grob.ServiceFabric.Agent
 {
-    [EventSource(Name = "MyCompany-Grob.ServiceFabric-Grob.Test")]
+    [EventSource(Name = "MyCompany-Grob.ServiceFabric-Grob.ServiceFabric.Agent")]
 internal sealed class ServiceEventSource : EventSource
 {
     public static readonly ServiceEventSource Current = new ServiceEventSource();

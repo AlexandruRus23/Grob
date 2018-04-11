@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace Grob.Test
+namespace Grob.ServiceFabric.Agent
 {
     internal static class Program
     {
@@ -21,10 +21,10 @@ namespace Grob.Test
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("Grob.TestType",
-                    context => new Test(context)).GetAwaiter().GetResult();
+                ServiceRuntime.RegisterServiceAsync("Grob.ServiceFabric.AgentType",
+                    context => new Agent(context)).GetAwaiter().GetResult();
 
-                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Test).Name);
+                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Agent).Name);
 
                 // Prevents this host process from terminating so services keep running.
                 Thread.Sleep(Timeout.Infinite);

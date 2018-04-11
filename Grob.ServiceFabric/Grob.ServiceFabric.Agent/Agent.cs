@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Fabric;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Grob.ServiceFabric.Entities;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace Grob.Test
+namespace Grob.ServiceFabric.Agent
 {
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class Test : StatelessService
+    internal sealed class Agent : StatelessService
     {
-        public Test(StatelessServiceContext context)
+        public Agent(StatelessServiceContext context)
             : base(context)
         { }
 
@@ -42,10 +46,38 @@ namespace Grob.Test
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                ServiceEventSource.Current.ServiceMessage(this.Context, "Working-{0}", ++iterations);
+                //ServiceEventSource.Current.ServiceMessage(this.Context, "Working-{0}", ++iterations);
 
-                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+                var command = new GrobAgentCommand(GrobAgentCommandTypeEnum.RunImage, "eff56ac5d571");
+
+                var executor = new CommandExecutor(command);
+                executor.Run();
+
+                await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
             }
+        }
+
+        private void RegisterToScheduler()
+        {
+            var agent = new GrobAgent(Environment.MachineName, new Uri(GetLocalIPAddress()));
+
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:8609/api/agent");
+
+            client.SendAsync(request);
+        }
+
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
     }
 }

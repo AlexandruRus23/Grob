@@ -42,5 +42,15 @@ namespace Grob.Docker
 
             return images;
         }
+
+        public void RunImage(string imageName)
+        {
+            //_dockerClient.Containers.
+        }
+
+        public void StartContainer(string containerName)
+        {
+            _dockerClient.Containers.StartContainerAsync(containerName, new ContainerStartParameters());
+        }
     }
 }

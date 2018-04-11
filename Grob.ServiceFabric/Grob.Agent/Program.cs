@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grob.Scheduler
+namespace Grob.Agent
 {
     internal static class Program
     {
@@ -20,10 +20,10 @@ namespace Grob.Scheduler
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("Grob.SchedulerType",
-                    context => new Scheduler(context)).GetAwaiter().GetResult();
+                ServiceRuntime.RegisterServiceAsync("Grob.AgentType",
+                    context => new Agent(context)).GetAwaiter().GetResult();
 
-                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Scheduler).Name);
+                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Agent).Name);
 
                 // Prevents this host process from terminating so services keeps running. 
                 Thread.Sleep(Timeout.Infinite);

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <IsServiceFabricServiceProject>True</IsServiceFabricServiceProject>
     <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
@@ -11,6 +11,11 @@
     <PackageReference Include="Microsoft.ServiceFabric" Version="6.1.480" />
     <PackageReference Include="Microsoft.ServiceFabric.Data" Version="3.0.480" />
     <PackageReference Include="Microsoft.ServiceFabric.Services" Version="3.0.480" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Grob.Docker\Grob.Docker.csproj" />
+    <ProjectReference Include="..\Grob.ServiceFabric.Entities\Grob.ServiceFabric.Entities.csproj" />
   </ItemGroup>
 
 </Project>

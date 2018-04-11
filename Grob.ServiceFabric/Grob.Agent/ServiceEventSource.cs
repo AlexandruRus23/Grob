@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace Grob.Scheduler
+namespace Grob.Agent
 {
-    [EventSource(Name = "MyCompany-Grob.ServiceFabric-Grob.Scheduler")]
+    [EventSource(Name = "MyCompany-Grob.ServiceFabric-Grob.Agent")]
     internal sealed class ServiceEventSource : EventSource
     {
         public static readonly ServiceEventSource Current = new ServiceEventSource();
