@@ -2,9 +2,6 @@
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="Grob.ServiceFabricType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
     <Parameter Name="Grob.ServiceFabric.Agent_InstanceCount" DefaultValue="-1" />
-    <Parameter Name="Grob.Scheduler_MinReplicaSetSize" DefaultValue="3" />
-    <Parameter Name="Grob.Scheduler_PartitionCount" DefaultValue="1" />
-    <Parameter Name="Grob.Scheduler_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="Grob.Web_InstanceCount" DefaultValue="-1" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
@@ -12,10 +9,6 @@
        ServiceManifest.xml file. -->
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Grob.ServiceFabric.AgentPkg" ServiceManifestVersion="1.0.0" />
-    <ConfigOverrides />
-  </ServiceManifestImport>
-  <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="Grob.SchedulerPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
   </ServiceManifestImport>
   <ServiceManifestImport>
@@ -32,11 +25,6 @@
       <StatelessService ServiceTypeName="Grob.ServiceFabric.AgentType" InstanceCount="[Grob.ServiceFabric.Agent_InstanceCount]">
         <SingletonPartition />
       </StatelessService>
-    </Service>
-    <Service Name="Grob.Scheduler" ServicePackageActivationMode="ExclusiveProcess">
-      <StatefulService ServiceTypeName="Grob.SchedulerType" TargetReplicaSetSize="[Grob.Scheduler_TargetReplicaSetSize]" MinReplicaSetSize="[Grob.Scheduler_MinReplicaSetSize]">
-        <UniformInt64Partition PartitionCount="[Grob.Scheduler_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
-      </StatefulService>
     </Service>
     <Service Name="Grob.Web" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="Grob.WebType" InstanceCount="[Grob.Web_InstanceCount]">
