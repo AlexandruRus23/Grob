@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Docker.DotNet" Version="3.125.1" />
     <PackageReference Include="Microsoft.ServiceFabric" Version="6.1.480" />
     <PackageReference Include="Microsoft.ServiceFabric.Data" Version="3.0.480" />
     <PackageReference Include="Microsoft.ServiceFabric.Services" Version="3.0.480" />
