@@ -9,5 +9,15 @@ namespace Grob.Entities.Grob
     public class GrobTask
     {
         public GrobJob Job { get; set; }
+
+        public GrobTask()
+        {
+
+        }
+
+        public GrobTask(GrobJob job)
+        {
+            Job = job;
+        }
     }
 }

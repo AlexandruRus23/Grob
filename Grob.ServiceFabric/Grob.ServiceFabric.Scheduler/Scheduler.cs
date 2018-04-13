@@ -9,9 +9,9 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Grob.Entities.Grob;
 using Grob.ServiceFabric.Scheduler.JobRepository;
-using Grob.Agent.Models;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Client;
+using Grob.Master.Models;
 
 namespace Grob.ServiceFabric.Scheduler
 {
@@ -21,13 +21,13 @@ namespace Grob.ServiceFabric.Scheduler
     internal sealed class Scheduler : StatefulService
     {
         private IJobRepository _jobRepository;
-        private IGrobAgentService _grobAgent;
+        private IGrobMasterService _grobMaster;
 
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
             _jobRepository = new ServiceFabricJobRepository(this.StateManager);
-            _grobAgent = ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"));
+            _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }
 
         /// <summary>
@@ -49,6 +49,7 @@ namespace Grob.ServiceFabric.Scheduler
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
+
             var Job = new GrobJob("job1", "test", "tag");
             var Job2 = new GrobJob("job2", "test", "tag");
             var Job3 = new GrobJob("job3", "test", "tag");
@@ -57,9 +58,9 @@ namespace Grob.ServiceFabric.Scheduler
             await _jobRepository.AddJob(Job);
             await _jobRepository.AddJob(Job);
 
-            var list = await _jobRepository.GetJobs();
+            var task = new GrobTask(Job);
 
-            await _grobAgent.RunJob(list.FirstOrDefault());
+            await _grobMaster.RunJob(task);
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Grob.Agent.Models;
+using Grob.Entities.Grob;
 
 namespace Grob.ServiceFabric.Master
 {
@@ -29,16 +30,16 @@ namespace Grob.ServiceFabric.Master
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
-            return this.CreateServiceReplicaListeners();
+            return this.CreateServiceRemotingReplicaListeners();
         }
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
         }
 
-        public Task RunJob(Task task)
+        public async Task RunJob(GrobTask task)
         {
-            throw new NotImplementedException();
+            await _grobAgent.RunJob(task.Job);
         }        
     }
 }

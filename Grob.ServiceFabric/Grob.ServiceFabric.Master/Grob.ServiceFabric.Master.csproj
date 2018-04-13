@@ -106,6 +106,10 @@
       <Project>{0743107d-ccf2-4da3-b71b-44857189dc26}</Project>
       <Name>Grob.Agent.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Grob.Entities\Grob.Entities.csproj">
+      <Project>{CFDBC2E9-ACA0-4FF8-BA22-2E943355CD4D}</Project>
+      <Name>Grob.Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Grob.Master.Models\Grob.Master.Models.csproj">
       <Project>{303350df-0df4-488d-9d9e-7f26c679e8bf}</Project>
       <Name>Grob.Master.Models</Name>
