@@ -10,14 +10,14 @@ namespace TestNetCoreApp
         {
             var dockerManager = new DockerManager();
 
-            var containersList = dockerManager.ListContainers();
+            var containersList = dockerManager.ListContainers().Result;
 
             foreach (var container in containersList)
             {
                 Console.WriteLine($"Image: {container.Image}. Tag: {container.ID}. Created At: {container.Created}");
             }
 
-            var imagesList = dockerManager.ListImages();
+            var imagesList = dockerManager.ListImages().Result;
 
             foreach (var image in imagesList)
             {

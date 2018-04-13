@@ -1,5 +1,5 @@
 ﻿using Grob.Docker;
-using Grob.ServiceFabric.Entities;
+using Grob.Agent.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

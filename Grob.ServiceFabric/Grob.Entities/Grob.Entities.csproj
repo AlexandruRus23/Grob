@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="Docker\Container.cs" />
     <Compile Include="Docker\Image.cs" />
+    <Compile Include="Grob\Job.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

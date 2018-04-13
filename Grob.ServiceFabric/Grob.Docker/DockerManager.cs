@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Grob.Docker
 {
-    public class DockerManager
+    public class DockerManager : IDockerManager
     {
         private DockerClient _dockerClient;
 
@@ -19,38 +19,38 @@ namespace Grob.Docker
             _dockerClient = dockerClientConfiguration.CreateClient();
         }
 
-        public IList<ContainerListResponse> ListContainers()
+        public async Task<IList<ContainerListResponse>> ListContainers()
         {
             var parameters = new ContainersListParameters()
             {
                 All = true
             };
 
-            var containers = _dockerClient.Containers.ListContainersAsync(parameters).Result;
+            var containers = await _dockerClient.Containers.ListContainersAsync(parameters);
 
             return containers;
         }
 
-        public IList<ImagesListResponse> ListImages()
+        public async Task<IList<ImagesListResponse>> ListImages()
         {
             var parameters = new ImagesListParameters()
             {
                 All = true
             };
 
-            var images = _dockerClient.Images.ListImagesAsync(parameters).Result;
+            var images = await _dockerClient.Images.ListImagesAsync(parameters);
 
             return images;
         }
 
-        public void RunImage(string imageName)
+        public async Task RunImage(string imageName)
         {
             //_dockerClient.Containers.
         }
 
-        public void StartContainer(string containerName)
+        public async Task StartContainer(string containerName)
         {
-            _dockerClient.Containers.StartContainerAsync(containerName, new ContainerStartParameters());
+            await _dockerClient.Containers.StartContainerAsync(containerName, new ContainerStartParameters());
         }
     }
 }

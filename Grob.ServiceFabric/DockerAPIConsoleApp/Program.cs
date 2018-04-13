@@ -17,14 +17,14 @@ namespace DockerAPIConsoleApp
 
 			var client = new DockerManager();
 
-			var containersList = client.ListContainers();
+			var containersList = client.ListContainers().Result;
 
 			foreach(var container in containersList)
 			{
 				Console.WriteLine($"Image: {container.Image}. Tag: {container.ID}. Created At: {container.Created}");
 			}
 
-			var imagesList = client.ListImages();
+			var imagesList = client.ListImages().Result;
 
 			foreach(var image in imagesList)
 			{
