@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Grob.Entities.Grob
 {
-    public class Job
+    public class GrobJob
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -14,11 +14,11 @@ namespace Grob.Entities.Grob
         public string JobImageName { get; set; }
         public string JobImageTag { get; set; }
 
-        public Job()
+        public GrobJob()
         {
 
         }
-        public Job(string name, string jobImageName, string jobImageTag)
+        public GrobJob(string name, string jobImageName, string jobImageTag)
         {
             Id = Guid.NewGuid();
             Name = name;

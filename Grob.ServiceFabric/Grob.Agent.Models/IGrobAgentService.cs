@@ -12,6 +12,6 @@ namespace Grob.Agent.Models
 {        
     public interface IGrobAgentService : IService
     {
-        Task RunJob(Job job);
+        Task RunJob(GrobJob job);
     }
 }

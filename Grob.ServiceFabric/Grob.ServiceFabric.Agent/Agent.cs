@@ -36,7 +36,6 @@ namespace Grob.ServiceFabric.Agent
         /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
-
             return this.CreateServiceRemotingInstanceListeners();
         }
 
@@ -72,7 +71,7 @@ namespace Grob.ServiceFabric.Agent
             }
         }        
 
-        public async Task RunJob(Job job)
+        public async Task RunJob(GrobJob job)
         {
             await _dockerManager.StartContainer(job.Name);
         }

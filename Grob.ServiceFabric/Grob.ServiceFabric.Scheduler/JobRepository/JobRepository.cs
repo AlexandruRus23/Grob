@@ -20,9 +20,9 @@ namespace Grob.ServiceFabric.Scheduler.JobRepository
             _stateManager = stateManager;
         }
 
-        public async Task AddJob(Job job)
+        public async Task AddJob(GrobJob job)
         {
-            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, Job>>(JOBS_COLLECTION);
+            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobJob>>(JOBS_COLLECTION);
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -32,10 +32,10 @@ namespace Grob.ServiceFabric.Scheduler.JobRepository
             }
         }
 
-        public async Task<IEnumerable<Job>> GetJobs()
+        public async Task<IEnumerable<GrobJob>> GetJobs()
         {
-            var jobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, Job>>(JOBS_COLLECTION);
-            var result = new List<Job>();
+            var jobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobJob>>(JOBS_COLLECTION);
+            var result = new List<GrobJob>();
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -45,7 +45,7 @@ namespace Grob.ServiceFabric.Scheduler.JobRepository
                 {
                     while (await enumerator.MoveNextAsync(CancellationToken.None))
                     {
-                        KeyValuePair<Guid, Job> current = enumerator.Current;
+                        KeyValuePair<Guid, GrobJob> current = enumerator.Current;
                         result.Add(current.Value);
                     }
                 }

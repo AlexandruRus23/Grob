@@ -34,6 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Grob.ServiceFabric.Agent\Grob.ServiceFabric.Agent.csproj" />
+    <ProjectReference Include="..\Grob.ServiceFabric.Master\Grob.ServiceFabric.Master.csproj" />
     <ProjectReference Include="..\Grob.ServiceFabric.Scheduler\Grob.ServiceFabric.Scheduler.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

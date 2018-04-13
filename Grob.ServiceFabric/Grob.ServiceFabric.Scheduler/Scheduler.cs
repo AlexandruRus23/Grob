@@ -23,12 +23,11 @@ namespace Grob.ServiceFabric.Scheduler
         private IJobRepository _jobRepository;
         private IGrobAgentService _grobAgent;
 
-
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
             _jobRepository = new ServiceFabricJobRepository(this.StateManager);
-            _grobAgent = ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Agent"));
+            _grobAgent = ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"));
         }
 
         /// <summary>
@@ -50,35 +49,9 @@ namespace Grob.ServiceFabric.Scheduler
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following sample code with your own logic 
-            //       or remove this RunAsync override if it's not needed in your service.
-
-            //var myDictionary = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, long>>("myDictionary");
-
-            //while (true)
-            //{
-            //    cancellationToken.ThrowIfCancellationRequested();
-
-            //    using (var tx = this.StateManager.CreateTransaction())
-            //    {
-            //        var result = await myDictionary.TryGetValueAsync(tx, "Counter");
-
-            //        ServiceEventSource.Current.ServiceMessage(this.Context, "Current Counter Value: {0}",
-            //            result.HasValue ? result.Value.ToString() : "Value does not exist.");
-
-            //        await myDictionary.AddOrUpdateAsync(tx, "Counter", 0, (key, value) => ++value);
-
-            //        // If an exception is thrown before calling CommitAsync, the transaction aborts, all changes are 
-            //        // discarded, and nothing is saved to the secondary replicas.
-            //        await tx.CommitAsync();
-            //    }
-
-            //    await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
-            //}
-
-            var Job = new Job("job1", "test", "tag");
-            var Job2 = new Job("job2", "test", "tag");
-            var Job3 = new Job("job3", "test", "tag");
+            var Job = new GrobJob("job1", "test", "tag");
+            var Job2 = new GrobJob("job2", "test", "tag");
+            var Job3 = new GrobJob("job3", "test", "tag");
 
             await _jobRepository.AddJob(Job);
             await _jobRepository.AddJob(Job);
