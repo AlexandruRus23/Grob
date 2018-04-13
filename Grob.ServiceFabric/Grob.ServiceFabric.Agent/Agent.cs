@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Grob.Docker;
 using Grob.ServiceFabric.Entities;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
@@ -46,12 +47,16 @@ namespace Grob.ServiceFabric.Agent
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                //ServiceEventSource.Current.ServiceMessage(this.Context, "Working-{0}", ++iterations);
+                var dockerManager = new DockerManager();
+                var list = dockerManager.ListContainers();
 
-                var command = new GrobAgentCommand(GrobAgentCommandTypeEnum.RunImage, "eff56ac5d571");
+                foreach (var container in list)
+                {
+                    var command = new GrobAgentCommand(GrobAgentCommandTypeEnum.RunImage, container.ID);
 
-                var executor = new CommandExecutor(command);
-                executor.Run();
+                    var executor = new CommandExecutor(command);
+                    executor.Run();
+                }
 
                 await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
             }
