@@ -8,7 +8,7 @@ namespace Grob.ServiceFabric.Scheduler.JobRepository
 {
     interface IJobRepository
     {
-        Task AddJob(GrobJob job);
-        Task<IEnumerable<GrobJob>> GetJobs();
+        Task AddJob(GrobTask job);
+        Task<IEnumerable<GrobTask>> GetJobs();
     }
 }

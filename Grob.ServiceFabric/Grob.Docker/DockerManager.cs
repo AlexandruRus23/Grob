@@ -1,5 +1,6 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
+using Grob.Entities.Docker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Grob.Docker
             _dockerClient = dockerClientConfiguration.CreateClient();
         }
 
-        public async Task<IList<ContainerListResponse>> ListContainers()
+        public async Task<IEnumerable<Container>> ListContainers()
         {
             var parameters = new ContainersListParameters()
             {
@@ -28,10 +29,17 @@ namespace Grob.Docker
 
             var containers = await _dockerClient.Containers.ListContainersAsync(parameters);
 
-            return containers;
+            var result = new List<Container>();
+
+            foreach(var container in containers)
+            {
+                result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault()));
+            }
+
+            return result;
         }
 
-        public async Task<IList<ImagesListResponse>> ListImages()
+        public async Task<IEnumerable<Image>> ListImages()
         {
             var parameters = new ImagesListParameters()
             {
@@ -40,17 +48,19 @@ namespace Grob.Docker
 
             var images = await _dockerClient.Images.ListImagesAsync(parameters);
 
-            return images;
+            var result = new List<Image>();
+
+            foreach (var image in images)
+            {
+                result.Add(new Image(image.RepoTags, image.Created, image.ID, image.Containers, image.Size));
+            }
+
+            return result;
         }
 
-        public async Task RunImage(string imageName)
+        public async Task StartContainerAsync(Container container)
         {
-            //_dockerClient.Containers.
-        }
-
-        public async Task StartContainer(string containerName)
-        {
-            await _dockerClient.Containers.StartContainerAsync(containerName, new ContainerStartParameters());
+            await _dockerClient.Containers.StartContainerAsync(container.Id, new ContainerStartParameters());
         }
     }
 }

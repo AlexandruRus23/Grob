@@ -1,4 +1,6 @@
-﻿using Grob.Entities.Grob;
+﻿using Docker.DotNet.Models;
+using Grob.Entities.Docker;
+using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.FabricTransport;
 using System;
@@ -12,6 +14,7 @@ namespace Grob.Agent.Models
 {        
     public interface IGrobAgentService : IService
     {
-        Task RunJob(GrobJob job);
+        Task RunContainerAsync(Container container);
+        Task<IEnumerable<Container>> GetContainersAsync();
     }
 }

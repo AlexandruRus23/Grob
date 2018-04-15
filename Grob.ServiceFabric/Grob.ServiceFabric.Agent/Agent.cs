@@ -13,6 +13,8 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using Docker.DotNet.Models;
+using Grob.Entities.Docker;
 
 namespace Grob.ServiceFabric.Agent
 {
@@ -26,8 +28,8 @@ namespace Grob.ServiceFabric.Agent
         public Agent(StatelessServiceContext context)
             : base(context)
         {
-            _dockerManager = new StubDockerManager();
-            //_dockerManager = new DockerManager();
+            //_dockerManager = new StubDockerManager();
+            _dockerManager = new DockerManager();
         }
 
         /// <summary>
@@ -45,38 +47,38 @@ namespace Grob.ServiceFabric.Agent
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following sample code with your own logic 
-            //       or remove this RunAsync override if it's not needed in your service.            
+            //TODO: Replace the following sample code with your own logic
+            //      or remove this RunAsync override if it's not needed in your service.            
 
             long iterations = 0;
 
-            while (true)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+            //while (true)
+            //{
+            //    cancellationToken.ThrowIfCancellationRequested();
 
-                var list = _dockerManager.ListContainers().Result;
+            //    var list = _dockerManager.ListContainers().Result;
 
-                if (list != null)
-                {
-                    foreach (var container in list)
-                    {
-                        var command = new GrobAgentCommand(GrobAgentCommandTypeEnum.RunImage, container.ID);
+            //    foreach (var container in list)
+            //    {
+            //        await _dockerManager.StartContainerAsync(container);
+            //    }
 
-                        var executor = new CommandExecutor(command);
-                        executor.Run();
-                    }
-                }                
+            //    await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
+            //}
+        }
 
-                await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
-            }
-        }        
-
-        public async Task RunJob(GrobJob job)
+        public async Task RunContainerAsync(Container container)
         {
-            await _dockerManager.StartContainer(job.Name);
+            await _dockerManager.StartContainerAsync(container);
+        }
+
+        public async Task<IEnumerable<Container>> GetContainersAsync()
+        {
+            return await _dockerManager.ListContainers();
         }
 
         #region private
+
         private void RegisterToScheduler()
         {
             var agent = new GrobAgent(Environment.MachineName, new Uri(GetLocalIPAddress()));
@@ -99,6 +101,7 @@ namespace Grob.ServiceFabric.Agent
             }
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
+
         #endregion
     }
 }

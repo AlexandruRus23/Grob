@@ -6,7 +6,23 @@ using System.Threading.Tasks;
 
 namespace Grob.Entities.Docker
 {
-    class Container
+    public class Container
     {
+        public string Command { get; set; }
+        public DateTime Created { get; set; }
+        public string Image { get; set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public Guid Key { get; set; }
+
+        public Container(string command, DateTime created, string id, string image, string name)
+        {
+            this.Command = command;
+            this.Created = created;
+            Id = id;
+            this.Image = image;
+            this.Name = name;
+        }
+
     }
 }

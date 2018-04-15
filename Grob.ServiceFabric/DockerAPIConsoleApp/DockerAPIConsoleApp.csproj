@@ -68,6 +68,10 @@
       <Project>{DCA5615C-4757-4040-8D1A-FDBFEB610161}</Project>
       <Name>Grob.Docker</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Grob.Entities\Grob.Entities.csproj">
+      <Project>{CFDBC2E9-ACA0-4FF8-BA22-2E943355CD4D}</Project>
+      <Name>Grob.Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

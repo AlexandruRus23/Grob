@@ -23,6 +23,9 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Grob.ServiceFabric.AgentPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
+    <Policies>
+      <RunAsPolicy CodePackageRef="Code" UserRef="LocalSystem" />
+    </Policies>
   </ServiceManifestImport>
   <DefaultServices>
     <!-- The section below creates instances of service types, when an instance of this 
@@ -46,4 +49,20 @@
       </StatelessService>
     </Service>
   </DefaultServices>
+  <Principals>
+    <Groups>
+      <Group Name="LocalAdminGroup">
+        <Membership>
+          <SystemGroup Name="Administrators" />
+        </Membership>
+      </Group>
+    </Groups>
+    <Users>
+      <User Name="LocalSystem" AccountType="LocalSystem">
+        <MemberOf>
+          <Group NameRef="LocalAdminGroup" />
+        </MemberOf>
+      </User>
+    </Users>
+  </Principals>
 </ApplicationManifest>

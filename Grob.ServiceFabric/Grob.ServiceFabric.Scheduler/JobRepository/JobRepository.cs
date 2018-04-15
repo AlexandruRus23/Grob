@@ -10,42 +10,42 @@ using Microsoft.ServiceFabric.Data.Collections;
 
 namespace Grob.ServiceFabric.Scheduler.JobRepository
 {
-    public class ServiceFabricJobRepository : IJobRepository
+    public class JobRepository : IJobRepository
     {
-        private const string JOBS_COLLECTION = "GrobJobs";
+        private const string TASK_COLLECTION = "GrobJobs";
         private IReliableStateManager _stateManager;
 
-        public ServiceFabricJobRepository(IReliableStateManager stateManager)
+        public JobRepository(IReliableStateManager stateManager)
         {
             _stateManager = stateManager;
         }
 
-        public async Task AddJob(GrobJob job)
+        public async Task AddJob(GrobTask task)
         {
-            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobJob>>(JOBS_COLLECTION);
+            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(TASK_COLLECTION);
 
             using (var tx = _stateManager.CreateTransaction())
             {
-                await grobJobs.AddOrUpdateAsync(tx, job.Id, job, (id, value) => job);
+                await grobJobs.AddOrUpdateAsync(tx, task.Id, task, (id, value) => task);
 
                 await tx.CommitAsync();
             }
         }
 
-        public async Task<IEnumerable<GrobJob>> GetJobs()
+        public async Task<IEnumerable<GrobTask>> GetJobs()
         {
-            var jobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobJob>>(JOBS_COLLECTION);
-            var result = new List<GrobJob>();
+            var tasks = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(TASK_COLLECTION);
+            var result = new List<GrobTask>();
 
             using (var tx = _stateManager.CreateTransaction())
             {
-                var allJobs = await jobs.CreateEnumerableAsync(tx, EnumerationMode.Unordered);
+                var allTasks = await tasks.CreateEnumerableAsync(tx, EnumerationMode.Unordered);
 
-                using (var enumerator = allJobs.GetAsyncEnumerator())
+                using (var enumerator = allTasks.GetAsyncEnumerator())
                 {
                     while (await enumerator.MoveNextAsync(CancellationToken.None))
                     {
-                        KeyValuePair<Guid, GrobJob> current = enumerator.Current;
+                        KeyValuePair<Guid, GrobTask> current = enumerator.Current;
                         result.Add(current.Value);
                     }
                 }

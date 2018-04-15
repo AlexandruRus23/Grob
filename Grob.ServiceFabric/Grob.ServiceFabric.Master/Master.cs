@@ -12,6 +12,7 @@ using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Grob.Agent.Models;
 using Grob.Entities.Grob;
+using Grob.ServiceFabric.Master.ContainerRepository;
 
 namespace Grob.ServiceFabric.Master
 {
@@ -21,6 +22,7 @@ namespace Grob.ServiceFabric.Master
     internal sealed class Master : StatefulService, IGrobMasterService
     {
         private IGrobAgentService _grobAgent;
+        private IContainerRepository _containerRepository;
 
         public Master(StatefulServiceContext context)
             : base(context)
@@ -35,11 +37,24 @@ namespace Grob.ServiceFabric.Master
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
+            //while (true)
+            //{
+            //    var containers = await _grobAgent.GetContainersAsync();
+            //    containers.ToList().ForEach(c => _containerRepository.AddContainerAsync(c));
+            //    await Task.Delay(TimeSpan.FromSeconds(60), cancellationToken);
+            //}
         }
 
-        public async Task RunJob(GrobTask task)
+        public async Task RunTask(GrobTask task)
         {
-            await _grobAgent.RunJob(task.Job);
+            var containers = await _containerRepository.GetAllContainersAsync();
+
+            var container = containers.Where(c => c.Name == task.Name)?.FirstOrDefault();
+
+            if(container != null)
+            {
+                await _grobAgent.RunContainerAsync(container);
+            }
         }        
     }
 }

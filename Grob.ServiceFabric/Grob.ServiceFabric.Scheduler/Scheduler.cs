@@ -26,7 +26,7 @@ namespace Grob.ServiceFabric.Scheduler
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
-            _jobRepository = new ServiceFabricJobRepository(this.StateManager);
+            _jobRepository = new JobRepository.JobRepository(this.StateManager);
             _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }
 
@@ -49,18 +49,22 @@ namespace Grob.ServiceFabric.Scheduler
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
+            while (true)
+            {
+                //var Job = new GrobTask("/clever_haibt", "test", "tag");
+                //var Job2 = new GrobJob("job2", "test", "tag");
+                //var Job3 = new GrobJob("job3", "test", "tag");
 
-            var Job = new GrobJob("job1", "test", "tag");
-            var Job2 = new GrobJob("job2", "test", "tag");
-            var Job3 = new GrobJob("job3", "test", "tag");
+                //await _jobRepository.AddJob(Job);
+                //await _jobRepository.AddJob(Job);
+                //await _jobRepository.AddJob(Job);
 
-            await _jobRepository.AddJob(Job);
-            await _jobRepository.AddJob(Job);
-            await _jobRepository.AddJob(Job);
+                //var task = new GrobTask(Job);
 
-            var task = new GrobTask(Job);
+                //await _grobMaster.RunJob(task);
 
-            await _grobMaster.RunJob(task);
+                await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
+            }            
         }
     }
 }

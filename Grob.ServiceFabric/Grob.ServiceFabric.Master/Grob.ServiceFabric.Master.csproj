@@ -90,6 +90,8 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerRepository\ContainerRepository.cs" />
+    <Compile Include="ContainerRepository\IContainerRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Master.cs" />
     <Compile Include="Program.cs" />

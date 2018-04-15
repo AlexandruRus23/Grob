@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Docker.DotNet.Models;
+using Grob.Entities.Docker;
 
 namespace Grob.Docker
 {
     public interface IDockerManager
     {
-        Task<IList<ContainerListResponse>> ListContainers();
-        Task<IList<ImagesListResponse>> ListImages();
-        Task RunImage(string imageName);
-        Task StartContainer(string containerName);
+        Task<IEnumerable<Container>> ListContainers();
+        Task<IEnumerable<Image>> ListImages();
+        Task StartContainerAsync(Container containerName);
     }
 }

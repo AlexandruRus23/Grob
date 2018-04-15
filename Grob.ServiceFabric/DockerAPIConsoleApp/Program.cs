@@ -21,7 +21,7 @@ namespace DockerAPIConsoleApp
 
 			foreach(var container in containersList)
 			{
-				Console.WriteLine($"Image: {container.Image}. Tag: {container.ID}. Created At: {container.Created}");
+				Console.WriteLine($"Image: {container.Image}. Tag: {container.Id}. Created At: {container.Created}");
 			}
 
 			var imagesList = client.ListImages().Result;

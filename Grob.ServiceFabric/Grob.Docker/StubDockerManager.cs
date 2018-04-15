@@ -4,27 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Docker.DotNet.Models;
+using Grob.Entities.Docker;
 
 namespace Grob.Docker
 {
     public class StubDockerManager : IDockerManager
     {
-        public async Task<IList<ContainerListResponse>> ListContainers()
+        public async Task<IEnumerable<Container>> ListContainers()
         {
-            return null;
+            return new List<Container>();
         }
 
-        public async Task<IList<ImagesListResponse>> ListImages()
+        public async Task<IEnumerable<Image>> ListImages()
         {
-            return null;
+            return new List<Image>();
         }
+        
 
-        public async Task RunImage(string imageName)
-        {            
-        }
-
-        public async Task StartContainer(string containerName)
-        {            
+        public async Task StartContainerAsync(Container containerName)
+        {
         }
     }
 }

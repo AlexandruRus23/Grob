@@ -12,6 +12,6 @@ namespace Grob.Master.Models
 {
     public interface IGrobMasterService : IService
     {
-        Task RunJob(GrobTask task);
+        Task RunTask(GrobTask task);
     }
 }

@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Docker\Container.cs" />
     <Compile Include="Docker\Image.cs" />
-    <Compile Include="Grob\GrobJob.cs" />
     <Compile Include="Grob\GrobTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

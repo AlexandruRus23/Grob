@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Grob.Entities.Docker;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +9,17 @@ namespace Grob.Entities.Grob
 {
     public class GrobTask
     {
-        public GrobJob Job { get; set; }
+        public string Name { get; set; }
+        public Guid Id { get; set; }
 
         public GrobTask()
         {
 
         }
 
-        public GrobTask(GrobJob job)
+        public GrobTask(string name)
         {
-            Job = job;
+            Name = name;
         }
     }
 }
