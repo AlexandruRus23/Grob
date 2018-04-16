@@ -6,7 +6,7 @@ namespace Grob.Docker
 {
     public interface IDockerManager
     {
-        Task<IEnumerable<Container>> ListContainers();
+        Task<List<Container>> ListContainers();
         Task<IEnumerable<Image>> ListImages();
         Task StartContainerAsync(Container containerName);
     }

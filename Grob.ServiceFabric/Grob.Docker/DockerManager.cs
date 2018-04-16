@@ -20,7 +20,7 @@ namespace Grob.Docker
             _dockerClient = dockerClientConfiguration.CreateClient();
         }
 
-        public async Task<IEnumerable<Container>> ListContainers()
+        public async Task<List<Container>> ListContainers()
         {
             var parameters = new ContainersListParameters()
             {

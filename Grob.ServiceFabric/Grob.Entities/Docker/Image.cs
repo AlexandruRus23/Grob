@@ -22,5 +22,10 @@ namespace Grob.Entities.Docker
             this.Containers = containers;
             this.Size = size;
         }
+
+        public Image()
+        {
+
+        }
     }
 }

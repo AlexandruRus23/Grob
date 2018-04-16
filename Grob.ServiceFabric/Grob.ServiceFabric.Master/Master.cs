@@ -13,6 +13,7 @@ using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Grob.Agent.Models;
 using Grob.Entities.Grob;
 using Grob.ServiceFabric.Master.ContainerRepository;
+using Grob.Entities.Docker;
 
 namespace Grob.ServiceFabric.Master
 {
@@ -28,6 +29,7 @@ namespace Grob.ServiceFabric.Master
             : base(context)
         {
             _grobAgent = ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Agent"));
+            _containerRepository = new ServiceFabricContainerRepository(this.StateManager);
         }
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
@@ -37,19 +39,15 @@ namespace Grob.ServiceFabric.Master
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            //while (true)
-            //{
-            //    var containers = await _grobAgent.GetContainersAsync();
-            //    containers.ToList().ForEach(c => _containerRepository.AddContainerAsync(c));
-            //    await Task.Delay(TimeSpan.FromSeconds(60), cancellationToken);
-            //}
+            List<Container> containers = await _grobAgent.GetContainersAsync();
+            containers.ForEach(c => _containerRepository.AddContainerAsync(c));
         }
 
         public async Task RunTask(GrobTask task)
         {
             var containers = await _containerRepository.GetAllContainersAsync();
 
-            var container = containers.Where(c => c.Name == task.Name)?.FirstOrDefault();
+            var container = containers.Where(c => c.Image == task.Name)?.FirstOrDefault();
 
             if(container != null)
             {

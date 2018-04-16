@@ -26,7 +26,7 @@ namespace Grob.ServiceFabric.Scheduler
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
-            _jobRepository = new JobRepository.JobRepository(this.StateManager);
+            _jobRepository = new JobRepository.ServiceFabricJobRepository(this.StateManager);
             _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }
 
@@ -51,17 +51,13 @@ namespace Grob.ServiceFabric.Scheduler
         {
             while (true)
             {
-                //var Job = new GrobTask("/clever_haibt", "test", "tag");
-                //var Job2 = new GrobJob("job2", "test", "tag");
-                //var Job3 = new GrobJob("job3", "test", "tag");
+                var task = new GrobTask("hello-world");
 
-                //await _jobRepository.AddJob(Job);
-                //await _jobRepository.AddJob(Job);
-                //await _jobRepository.AddJob(Job);
-
-                //var task = new GrobTask(Job);
-
-                //await _grobMaster.RunJob(task);
+                await _jobRepository.AddTask(task);
+                await _jobRepository.AddTask(task);
+                await _jobRepository.AddTask(task);
+                
+                await _grobMaster.RunTask(task);
 
                 await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
             }            

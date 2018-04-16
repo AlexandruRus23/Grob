@@ -72,7 +72,7 @@ namespace Grob.ServiceFabric.Agent
             await _dockerManager.StartContainerAsync(container);
         }
 
-        public async Task<IEnumerable<Container>> GetContainersAsync()
+        public async Task<List<Container>> GetContainersAsync()
         {
             return await _dockerManager.ListContainers();
         }

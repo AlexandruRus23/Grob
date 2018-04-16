@@ -13,7 +13,6 @@ namespace Grob.Entities.Docker
         public string Image { get; set; }
         public string Name { get; set; }
         public string Id { get; set; }
-        public Guid Key { get; set; }
 
         public Container(string command, DateTime created, string id, string image, string name)
         {
@@ -22,6 +21,11 @@ namespace Grob.Entities.Docker
             Id = id;
             this.Image = image;
             this.Name = name;
+        }
+
+        public Container()
+        {
+
         }
 
     }

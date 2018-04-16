@@ -15,6 +15,6 @@ namespace Grob.Agent.Models
     public interface IGrobAgentService : IService
     {
         Task RunContainerAsync(Container container);
-        Task<IEnumerable<Container>> GetContainersAsync();
+        Task<List<Container>> GetContainersAsync();
     }
 }

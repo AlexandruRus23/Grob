@@ -10,23 +10,23 @@ using Microsoft.ServiceFabric.Data.Collections;
 
 namespace Grob.ServiceFabric.Master.ContainerRepository
 {
-    public class ContainerRepository : IContainerRepository
+    public class ServiceFabricContainerRepository : IContainerRepository
     {
         private const string CONTAINER_COLLECTION = "GrobContainers";
         private IReliableStateManager _stateManager;
 
-        public ContainerRepository(IReliableStateManager stateManager)
+        public ServiceFabricContainerRepository(IReliableStateManager stateManager)
         {
             _stateManager = stateManager;
         }
 
         public async Task AddContainerAsync(Container container)
         {
-            var containers = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, Container>>(CONTAINER_COLLECTION);
+            var containers = await _stateManager.GetOrAddAsync<IReliableDictionary<string, Container>>(CONTAINER_COLLECTION);
 
             using (var tx = _stateManager.CreateTransaction())
             {
-                await containers.AddOrUpdateAsync(tx, container.Key, container, (id, value) => container);
+                await containers.AddOrUpdateAsync(tx, container.Id, container, (id, value) => container);
 
                 await tx.CommitAsync();
             }
@@ -34,7 +34,7 @@ namespace Grob.ServiceFabric.Master.ContainerRepository
 
         public async Task<IEnumerable<Container>> GetAllContainersAsync()
         {
-            var containers = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, Container>>(CONTAINER_COLLECTION);
+            var containers = await _stateManager.GetOrAddAsync<IReliableDictionary<string, Container>>(CONTAINER_COLLECTION);
             var result = new List<Container>();
 
             using (var tx = _stateManager.CreateTransaction())
@@ -45,7 +45,7 @@ namespace Grob.ServiceFabric.Master.ContainerRepository
                 {
                     while(await enumerator.MoveNextAsync(CancellationToken.None))
                     {
-                        KeyValuePair<Guid, Container> current = enumerator.Current;
+                        KeyValuePair<string, Container> current = enumerator.Current;
                         result.Add(current.Value);
                     }
                 }

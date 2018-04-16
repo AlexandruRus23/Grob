@@ -10,7 +10,7 @@ namespace Grob.Docker
 {
     public class StubDockerManager : IDockerManager
     {
-        public async Task<IEnumerable<Container>> ListContainers()
+        public async Task<List<Container>> ListContainers()
         {
             return new List<Container>();
         }
