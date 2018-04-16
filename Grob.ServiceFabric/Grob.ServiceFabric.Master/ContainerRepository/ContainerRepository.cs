@@ -32,7 +32,7 @@ namespace Grob.ServiceFabric.Master.ContainerRepository
             }
         }
 
-        public async Task<IEnumerable<Container>> GetAllContainersAsync()
+        public async Task<List<Container>> GetAllContainersAsync()
         {
             var containers = await _stateManager.GetOrAddAsync<IReliableDictionary<string, Container>>(CONTAINER_COLLECTION);
             var result = new List<Container>();

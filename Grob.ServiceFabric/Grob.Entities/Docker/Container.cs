@@ -13,14 +13,16 @@ namespace Grob.Entities.Docker
         public string Image { get; set; }
         public string Name { get; set; }
         public string Id { get; set; }
+        public string Status { get; set; }
 
-        public Container(string command, DateTime created, string id, string image, string name)
+        public Container(string command, DateTime created, string id, string image, string name, string status)
         {
             this.Command = command;
             this.Created = created;
             Id = id;
             this.Image = image;
             this.Name = name;
+            this.Status = status;
         }
 
         public Container()

@@ -10,6 +10,6 @@ namespace Grob.ServiceFabric.Master.ContainerRepository
     interface IContainerRepository
     {
         Task AddContainerAsync(Container container);
-        Task<IEnumerable<Container>> GetAllContainersAsync();
+        Task<List<Container>> GetAllContainersAsync();
     }
 }

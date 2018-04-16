@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Grob.Web.Models;
+using Grob.ServiceFabric.Web.Models;
 
-namespace Grob.Web.Controllers
+namespace Grob.ServiceFabric.Web.Controllers
 {
     public class HomeController : Controller
     {

@@ -53,6 +53,11 @@ namespace Grob.ServiceFabric.Master
             {
                 await _grobAgent.RunContainerAsync(container);
             }
-        }        
+        }
+
+        public async Task<List<Container>> GetContainersAsync()
+        {
+            return await _containerRepository.GetAllContainersAsync();
+        }
     }
 }

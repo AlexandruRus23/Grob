@@ -1,6 +1,6 @@
 using System;
 
-namespace Grob.Web.Models
+namespace Grob.ServiceFabric.Web.Models
 {
     public class ErrorViewModel
     {

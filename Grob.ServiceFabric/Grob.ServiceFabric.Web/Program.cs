@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Grob.Web
+namespace Grob.ServiceFabric.Web
 {
     internal static class Program
     {
@@ -20,7 +20,7 @@ namespace Grob.Web
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("Grob.WebType",
+                ServiceRuntime.RegisterServiceAsync("Grob.ServiceFabric.WebType",
                     context => new Web(context)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Web).Name);

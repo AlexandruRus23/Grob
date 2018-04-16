@@ -12,13 +12,14 @@ using Grob.ServiceFabric.Scheduler.JobRepository;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Client;
 using Grob.Master.Models;
+using Grob.Scheduler.Models;
 
 namespace Grob.ServiceFabric.Scheduler
 {
     /// <summary>
     /// An instance of this class is created for each service replica by the Service Fabric runtime.
     /// </summary>
-    internal sealed class Scheduler : StatefulService
+    internal sealed class Scheduler : StatefulService, IGrobSchedulerService
     {
         private IJobRepository _jobRepository;
         private IGrobMasterService _grobMaster;
@@ -28,7 +29,7 @@ namespace Grob.ServiceFabric.Scheduler
         {
             _jobRepository = new JobRepository.ServiceFabricJobRepository(this.StateManager);
             _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
-        }
+        }        
 
         /// <summary>
         /// Optional override to create listeners (e.g., HTTP, Service Remoting, WCF, etc.) for this service replica to handle client or user requests.
@@ -49,18 +50,23 @@ namespace Grob.ServiceFabric.Scheduler
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            while (true)
-            {
-                var task = new GrobTask("hello-world");
+            //while (true)
+            //{
+            //    var task = new GrobTask("hello-world");
 
-                await _jobRepository.AddTask(task);
-                await _jobRepository.AddTask(task);
-                await _jobRepository.AddTask(task);
+            //    await _jobRepository.AddTask(task);
+            //    await _jobRepository.AddTask(task);
+            //    await _jobRepository.AddTask(task);
                 
-                await _grobMaster.RunTask(task);
+            //    await _grobMaster.RunTask(task);
 
-                await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
-            }            
+            //    await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
+            //}            
+        }
+
+        public Task<List<GrobTask>> GetTasks()
+        {
+            throw new NotImplementedException();
         }
     }
 }

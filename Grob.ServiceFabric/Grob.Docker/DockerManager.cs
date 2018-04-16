@@ -33,7 +33,7 @@ namespace Grob.Docker
 
             foreach(var container in containers)
             {
-                result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault()));
+                result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault(), container.Status));
             }
 
             return result;

@@ -1,4 +1,5 @@
-﻿using Grob.Entities.Grob;
+﻿using Grob.Entities.Docker;
+using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.FabricTransport;
 using System;
@@ -13,5 +14,6 @@ namespace Grob.Master.Models
     public interface IGrobMasterService : IService
     {
         Task RunTask(GrobTask task);
+        Task<List<Container>> GetContainersAsync();
     }
 }
