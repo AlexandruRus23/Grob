@@ -14,6 +14,7 @@ using Grob.Agent.Models;
 using Grob.Entities.Grob;
 using Grob.ServiceFabric.Master.ContainerRepository;
 using Grob.Entities.Docker;
+using Microsoft.ServiceFabric.Services.Client;
 
 namespace Grob.ServiceFabric.Master
 {
@@ -22,25 +23,30 @@ namespace Grob.ServiceFabric.Master
     /// </summary>
     internal sealed class Master : StatefulService, IGrobMasterService
     {
-        private IGrobAgentService _grobAgent;
+        private List<IGrobAgentService> _grobAgentServices;
         private IContainerRepository _containerRepository;
 
         public Master(StatefulServiceContext context)
             : base(context)
         {
-            _grobAgent = ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Agent"));
+            _grobAgentServices = new List<IGrobAgentService>();
+            //_grobAgentRepository = ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Agent"), );            
             _containerRepository = new ServiceFabricContainerRepository(this.StateManager);
         }
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
-            return this.CreateServiceRemotingReplicaListeners();
+            // Service remoting
+            return this.CreateServiceRemotingReplicaListeners();            
         }
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            List<Container> containers = await _grobAgent.GetContainersAsync();
-            containers.ForEach(c => _containerRepository.AddContainerAsync(c));
+            foreach(var agent in _grobAgentServices)
+            {
+                List<Container> containers = await agent.GetContainersAsync();
+                containers.ForEach(c => _containerRepository.AddContainerAsync(c));
+            }           
         }
 
         public async Task RunTask(GrobTask task)
@@ -51,13 +57,25 @@ namespace Grob.ServiceFabric.Master
 
             if(container != null)
             {
-                await _grobAgent.RunContainerAsync(container);
+                await _grobAgentServices.FirstOrDefault()?.RunContainerAsync(container);
             }
         }
 
         public async Task<List<Container>> GetContainersAsync()
         {
-            return await _containerRepository.GetAllContainersAsync();
+            var result = new List<Container>();
+
+            foreach(var agent in _grobAgentServices)
+            {
+                result.AddRange(await agent.GetContainersAsync());
+            }
+
+            return result;
+        }
+
+        public async Task RegisterAgentAsync(string partitionKey)
+        {
+            _grobAgentServices.Add(ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Agent")));
         }
     }
 }

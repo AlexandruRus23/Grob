@@ -15,6 +15,11 @@ using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Docker.DotNet.Models;
 using Grob.Entities.Docker;
+using Grob.Master.Models;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
+using Microsoft.ServiceFabric.Services.Client;
+using System.Fabric.Description;
+using System.Text;
 
 namespace Grob.ServiceFabric.Agent
 {
@@ -24,12 +29,15 @@ namespace Grob.ServiceFabric.Agent
     internal sealed class Agent : StatelessService, IGrobAgentService
     {
         private IDockerManager _dockerManager;
+        private IGrobMasterService _grobMasterService;
 
         public Agent(StatelessServiceContext context)
             : base(context)
         {
-            //_dockerManager = new StubDockerManager();
-            _dockerManager = new DockerManager();
+            _dockerManager = new StubDockerManager();
+            //_dockerManager = new DockerManager();
+
+            _grobMasterService = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }
 
         /// <summary>
@@ -38,7 +46,40 @@ namespace Grob.ServiceFabric.Agent
         /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
-            return this.CreateServiceRemotingInstanceListeners();
+            // Service remoting
+            //return this.CreateServiceRemotingInstanceListeners();
+
+            // HTTP listener
+            //return new[] { new ServiceInstanceListener(context => new HttpCommunicationListener(context)) };
+
+            EndpointResourceDescription internalEndpoint = Context.CodePackageActivationContext.GetEndpoint("ProcessingServiceEndpoint");
+
+            string uriPrefix = String.Format(
+                "{0}://+:{1}/{2}/{3}-{4}/",
+                internalEndpoint.Protocol,
+                internalEndpoint.Port,
+                Context.PartitionId,
+                Context.ReplicaOrInstanceId,
+                Guid.NewGuid());
+
+            string nodeIP = FabricRuntime.GetNodeContext().IPAddressOrFQDN;
+
+            string uriPublished = uriPrefix.Replace("+", nodeIP);
+            return new HttpCommunicationListener(uriPrefix, uriPublished, this.ProcessInternalRequest);
+        }
+
+        private async Task ProcessInternalRequest(HttpListenerContext context, CancellationToken cancelRequest)
+        {
+            string output = "asd";
+
+            using (HttpListenerResponse response = context.Response)
+            {
+                if (output != null)
+                {
+                    byte[] outBytes = Encoding.UTF8.GetBytes(output);
+                    response.OutputStream.Write(outBytes, 0, outBytes.Length);
+                }
+            }
         }
 
         /// <summary>
@@ -47,24 +88,7 @@ namespace Grob.ServiceFabric.Agent
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            //TODO: Replace the following sample code with your own logic
-            //      or remove this RunAsync override if it's not needed in your service.            
-
-            long iterations = 0;
-
-            //while (true)
-            //{
-            //    cancellationToken.ThrowIfCancellationRequested();
-
-            //    var list = _dockerManager.ListContainers().Result;
-
-            //    foreach (var container in list)
-            //    {
-            //        await _dockerManager.StartContainerAsync(container);
-            //    }
-
-            //    await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
-            //}
+            await _grobMasterService.RegisterAgentAsync(Partition.PartitionInfo.Id.ToString());
         }
 
         public async Task RunContainerAsync(Container container)

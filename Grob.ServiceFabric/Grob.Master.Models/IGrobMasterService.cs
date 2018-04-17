@@ -15,5 +15,6 @@ namespace Grob.Master.Models
     {
         Task RunTask(GrobTask task);
         Task<List<Container>> GetContainersAsync();
+        Task RegisterAgentAsync(string partitionKey);
     }
 }

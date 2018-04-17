@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Grob.Agent.Models\Grob.Agent.Models.csproj" />
     <ProjectReference Include="..\Grob.Docker\Grob.Docker.csproj" />
+    <ProjectReference Include="..\Grob.Master.Models\Grob.Master.Models.csproj" />
   </ItemGroup>
 
 </Project>
