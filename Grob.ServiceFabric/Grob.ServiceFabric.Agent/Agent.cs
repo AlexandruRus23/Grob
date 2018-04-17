@@ -26,10 +26,11 @@ namespace Grob.ServiceFabric.Agent
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class Agent : StatelessService, IGrobAgentService
+    internal sealed class Agent : StatelessService
     {
         private IDockerManager _dockerManager;
         private IGrobMasterService _grobMasterService;
+        private OwinCommunicationListener communicationListener;
 
         public Agent(StatelessServiceContext context)
             : base(context)
@@ -51,35 +52,12 @@ namespace Grob.ServiceFabric.Agent
 
             // HTTP listener
             //return new[] { new ServiceInstanceListener(context => new HttpCommunicationListener(context)) };
+            communicationListener = new OwinCommunicationListener("agent", new Startup(), Context);
 
-            EndpointResourceDescription internalEndpoint = Context.CodePackageActivationContext.GetEndpoint("ProcessingServiceEndpoint");
-
-            string uriPrefix = String.Format(
-                "{0}://+:{1}/{2}/{3}-{4}/",
-                internalEndpoint.Protocol,
-                internalEndpoint.Port,
-                Context.PartitionId,
-                Context.ReplicaOrInstanceId,
-                Guid.NewGuid());
-
-            string nodeIP = FabricRuntime.GetNodeContext().IPAddressOrFQDN;
-
-            string uriPublished = uriPrefix.Replace("+", nodeIP);
-            return new HttpCommunicationListener(uriPrefix, uriPublished, this.ProcessInternalRequest);
-        }
-
-        private async Task ProcessInternalRequest(HttpListenerContext context, CancellationToken cancelRequest)
-        {
-            string output = "asd";
-
-            using (HttpListenerResponse response = context.Response)
+            return new[]
             {
-                if (output != null)
-                {
-                    byte[] outBytes = Encoding.UTF8.GetBytes(output);
-                    response.OutputStream.Write(outBytes, 0, outBytes.Length);
-                }
-            }
+                new ServiceInstanceListener(context => communicationListener)
+            };
         }
 
         /// <summary>
@@ -88,7 +66,8 @@ namespace Grob.ServiceFabric.Agent
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            await _grobMasterService.RegisterAgentAsync(Partition.PartitionInfo.Id.ToString());
+            var grobAgent = new GrobAgent(Environment.MachineName, communicationListener.GrobAgentAddress);
+            await _grobMasterService.RegisterAgentAsync(grobAgent);
         }
 
         public async Task RunContainerAsync(Container container)
@@ -102,16 +81,6 @@ namespace Grob.ServiceFabric.Agent
         }
 
         #region private
-
-        private void RegisterToScheduler()
-        {
-            var agent = new GrobAgent(Environment.MachineName, new Uri(GetLocalIPAddress()));
-
-            var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:8609/api/agent");
-
-            client.SendAsync(request);
-        }
 
         private static string GetLocalIPAddress()
         {

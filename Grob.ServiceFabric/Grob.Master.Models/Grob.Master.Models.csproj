@@ -95,6 +95,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Grob.Agent.Models\Grob.Agent.Models.csproj">
+      <Project>{0743107D-CCF2-4DA3-B71B-44857189DC26}</Project>
+      <Name>Grob.Agent.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Grob.Entities\Grob.Entities.csproj">
       <Project>{CFDBC2E9-ACA0-4FF8-BA22-2E943355CD4D}</Project>
       <Name>Grob.Entities</Name>

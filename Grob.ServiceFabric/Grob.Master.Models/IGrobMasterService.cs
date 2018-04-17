@@ -1,4 +1,5 @@
-﻿using Grob.Entities.Docker;
+﻿using Grob.Agent.Models;
+using Grob.Entities.Docker;
 using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.FabricTransport;
@@ -15,6 +16,6 @@ namespace Grob.Master.Models
     {
         Task RunTask(GrobTask task);
         Task<List<Container>> GetContainersAsync();
-        Task RegisterAgentAsync(string partitionKey);
+        Task RegisterAgentAsync(GrobAgent grobAgent);
     }
 }
