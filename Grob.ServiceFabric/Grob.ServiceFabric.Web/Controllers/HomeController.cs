@@ -1,18 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Grob.ServiceFabric.Web.Models;
+using Grob.Master.Models;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
+using Microsoft.ServiceFabric.Services.Client;
 
 namespace Grob.ServiceFabric.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private IGrobMasterService _grobMasterService;
+
+        public HomeController()
+        {
+            _grobMasterService = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
+        }
+
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexViewModel()
+            {
+                GrobAgents = _grobMasterService.GetGrobAgentsAsync().Result
+            };
+
+            return View(model);
         }
 
         public IActionResult About()

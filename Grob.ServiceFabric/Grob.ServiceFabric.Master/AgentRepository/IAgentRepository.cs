@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Grob.ServiceFabric.Master.AgentRepository
 {
-    public interface IAgentRepository
+    public interface IGrobAgentRepository
     {
         Task AddAgent(GrobAgent grobAgent);
-        Task<List<GrobAgent>> GetGrobAgents();
+        Task<List<GrobAgent>> GetGrobAgentsAsync();
     }
 }

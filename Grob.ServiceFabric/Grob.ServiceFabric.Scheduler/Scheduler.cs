@@ -13,6 +13,7 @@ using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Client;
 using Grob.Master.Models;
 using Grob.Scheduler.Models;
+using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 
 namespace Grob.ServiceFabric.Scheduler
 {
@@ -40,7 +41,7 @@ namespace Grob.ServiceFabric.Scheduler
         /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
-            return new ServiceReplicaListener[0];
+            return this.CreateServiceRemotingReplicaListeners();
         }
 
         /// <summary>
@@ -64,9 +65,9 @@ namespace Grob.ServiceFabric.Scheduler
             //}            
         }
 
-        public Task<List<GrobTask>> GetTasks()
+        public async Task<List<GrobTask>> GetTasksAsync()
         {
-            throw new NotImplementedException();
+            return new List<GrobTask>();
         }
     }
 }

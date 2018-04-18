@@ -15,6 +15,7 @@ using Grob.Entities.Grob;
 using Grob.ServiceFabric.Master.ContainerRepository;
 using Grob.Entities.Docker;
 using Microsoft.ServiceFabric.Services.Client;
+using Grob.ServiceFabric.Master.AgentRepository;
 
 namespace Grob.ServiceFabric.Master
 {
@@ -23,21 +24,20 @@ namespace Grob.ServiceFabric.Master
     /// </summary>
     internal sealed class Master : StatefulService, IGrobMasterService
     {
-        private List<GrobAgent> _grobAgentServices;
+        private IGrobAgentRepository _grobAgentRepository;
         private IContainerRepository _containerRepository;
 
         public Master(StatefulServiceContext context)
             : base(context)
-        {
-            _grobAgentServices = new List<GrobAgent>();
-            //_grobAgentRepository = ServiceProxy.Create<IGrobAgentService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Agent"), );            
+        {        
             _containerRepository = new ServiceFabricContainerRepository(this.StateManager);
+            _grobAgentRepository = new ServiceFabricAgentRepository(this.StateManager);
         }
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
             // Service remoting
-            return this.CreateServiceRemotingReplicaListeners();            
+            return this.CreateServiceRemotingReplicaListeners();
         }
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -55,9 +55,10 @@ namespace Grob.ServiceFabric.Master
 
             var container = containers.Where(c => c.Image == task.Name)?.FirstOrDefault();
 
-            if(container != null)
+            if (container != null)
             {
-                _grobAgentServices.FirstOrDefault()?.RunContainer(container);
+                var agents = await _grobAgentRepository.GetGrobAgentsAsync();
+                agents.FirstOrDefault()?.RunContainer(container);
             }
         }
 
@@ -65,7 +66,7 @@ namespace Grob.ServiceFabric.Master
         {
             var result = new List<Container>();
 
-            foreach(var agent in _grobAgentServices)
+            foreach (var agent in await _grobAgentRepository.GetGrobAgentsAsync())
             {
                 result.AddRange(agent.GetContainers());
             }
@@ -75,7 +76,12 @@ namespace Grob.ServiceFabric.Master
 
         public async Task RegisterAgentAsync(GrobAgent grobAgent)
         {
-            _grobAgentServices.Add(grobAgent);
+            await _grobAgentRepository.AddAgent(grobAgent);
+        }
+
+        public async Task<List<GrobAgent>> GetGrobAgentsAsync()
+        {
+            return await _grobAgentRepository.GetGrobAgentsAsync();
         }
     }
 }

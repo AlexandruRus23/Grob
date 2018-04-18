@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Grob.Agent.Models;
 using Grob.Constants;
@@ -10,7 +11,7 @@ using Microsoft.ServiceFabric.Data.Collections;
 
 namespace Grob.ServiceFabric.Master.AgentRepository
 {
-    public class ServiceFabricAgentRepository : IAgentRepository
+    public class ServiceFabricAgentRepository : IGrobAgentRepository
     {
         private IReliableStateManager _stateManager;
 
@@ -21,35 +22,30 @@ namespace Grob.ServiceFabric.Master.AgentRepository
 
         public async Task AddAgent(GrobAgent grobAgent)
         {
-            var agents = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobAgent>>(RepositoryConstants.AGENT_REPOSITORY);
+            var agents = await _stateManager.GetOrAddAsync<IReliableDictionary<string, GrobAgent>>(RepositoryConstants.AGENT_REPOSITORY);
 
             using (var tx = _stateManager.CreateTransaction())
             {
-                await agents.AddOrUpdateAsync(tx, grobAgent.AgentGuid, grobAgent, (id, value) => grobAgent);
+                await agents.AddOrUpdateAsync(tx, grobAgent.Name, grobAgent, (id, value) => grobAgent);
 
                 await tx.CommitAsync();
             }
         }
 
-        public Task<List<GrobAgent>> GetGrobAgents()
+        public async Task<List<GrobAgent>> GetGrobAgentsAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Container>> GetAllContainersAsync()
-        {
-            var containers = await _stateManager.GetOrAddAsync<IReliableDictionary<string, Container>>(RepositoryConstants.CONTAINER_REPOSITORY);
-            var result = new List<Container>();
+            var agents = await _stateManager.GetOrAddAsync<IReliableDictionary<string, GrobAgent>>(RepositoryConstants.AGENT_REPOSITORY);
+            var result = new List<GrobAgent>();
 
             using (var tx = _stateManager.CreateTransaction())
             {
-                var allContainers = await containers.CreateEnumerableAsync(tx, EnumerationMode.Unordered);
+                var allContainers = await agents.CreateEnumerableAsync(tx, EnumerationMode.Unordered);
 
                 using (var enumerator = allContainers.GetAsyncEnumerator())
                 {
                     while (await enumerator.MoveNextAsync(CancellationToken.None))
                     {
-                        KeyValuePair<string, Container> current = enumerator.Current;
+                        KeyValuePair<string, GrobAgent> current = enumerator.Current;
                         result.Add(current.Value);
                     }
                 }

@@ -1,14 +1,14 @@
 ﻿using Grob.Entities.Grob;
-using System;
+using Microsoft.ServiceFabric.Services.Remoting;
+using Microsoft.ServiceFabric.Services.Remoting.FabricTransport;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
+[assembly: FabricTransportServiceRemotingProvider(RemotingListener = RemotingListener.V2Listener, RemotingClient = RemotingClient.V2Client)]
 namespace Grob.Scheduler.Models
 {
-    public interface IGrobSchedulerService
+    public interface IGrobSchedulerService : IService
     {
-        Task<List<GrobTask>> GetTasks();
+        Task<List<GrobTask>> GetTasksAsync();
     }
 }

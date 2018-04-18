@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grob.Master.Models;
-using Grob.Scheduler.Models;
 using Grob.ServiceFabric.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,39 +11,41 @@ using Microsoft.ServiceFabric.Services.Remoting.Client;
 
 namespace Grob.ServiceFabric.Web.Controllers
 {
-    public class TaskController : Controller
-    {        
-        private IGrobSchedulerService _grobSchedulerService;
+    [Route("container")]
+    public class ContainerController : Controller
+    {
+        private IGrobMasterService _grobMasterService;
 
-        public TaskController()
-        {            
-            _grobSchedulerService = ServiceProxy.Create<IGrobSchedulerService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Scheduler"), new ServicePartitionKey(1));
+        public ContainerController()
+        {
+            _grobMasterService = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }
 
-        // GET: Task
-        public IActionResult Index()
+        [HttpGet]
+        // GET: Container
+        public ActionResult Index()
         {
-            var model = new TaskViewModel
+            var model = new ContainerViewModel()
             {
-                Tasks = _grobSchedulerService.GetTasksAsync().Result
+                Containers = _grobMasterService.GetContainersAsync().Result
             };
 
-            return View("Index", model);
+            return View(model);
         }
 
-        // GET: Task/Details/5
-        public IActionResult Details(int id)
+        // GET: Container/Details/5
+        public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Task/Create
-        public IActionResult Create()
+        // GET: Container/Create
+        public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Task/Create
+        // POST: Container/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -61,13 +62,13 @@ namespace Grob.ServiceFabric.Web.Controllers
             }
         }
 
-        // GET: Task/Edit/5
+        // GET: Container/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Task/Edit/5
+        // POST: Container/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -84,13 +85,13 @@ namespace Grob.ServiceFabric.Web.Controllers
             }
         }
 
-        // GET: Task/Delete/5
+        // GET: Container/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Task/Delete/5
+        // POST: Container/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

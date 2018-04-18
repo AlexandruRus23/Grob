@@ -1,4 +1,4 @@
-﻿@model Grob.ServiceFabric.Web.Models.TaskIndexModel
+﻿@model Grob.ServiceFabric.Web.Models.TaskViewModel
 
 @{
     ViewData["Title"] = "Tasks";
@@ -8,19 +8,16 @@
 
 <div>
     <div class="containers-container">
-        <div class="containers-name-header">Name</div>
+        <div class="containers-name-header">Containers</div>
     </div>
     <div class="containers-list">
-        @foreach(Grob.Entities.Docker.Container container in Model.Containers)
+        @foreach (Grob.Entities.Grob.GrobTask task in Model.Tasks)
         {
             <hr class="container-separator">
             <div class="container-row">
-                <div class="container-name-container">@Html.DisplayFor(m => container.Name)</div>
-                <div class="container-created-container">@Html.DisplayFor(m => container.Created)</div>
-                <div class="container-image-container">@Html.DisplayFor(m => container.Image)</div>
-                <div class="container-command-container">@Html.DisplayFor(m => container.Command)</div>
-                <div class="container-status-container">@Html.DisplayFor(m => container.Status)</div>
+                <div class="container-name-container">@Html.DisplayFor(m => task.Id)</div>
+                <div class="container-created-container">@Html.DisplayFor(m => task.Name)</div>
             </div>
         }
-    </div>
+    </div>   
 </div>

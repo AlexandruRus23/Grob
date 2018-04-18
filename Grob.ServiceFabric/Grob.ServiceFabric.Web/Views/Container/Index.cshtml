@@ -1,0 +1,25 @@
+﻿@model Grob.ServiceFabric.Web.Models.ContainerViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<div class="containers-container">
+    <div class="containers-name-header">Agents</div>
+</div>
+<div class="containers-list">
+    @foreach (Grob.Entities.Docker.Container container in Model.Containers)
+    {
+        <hr class="container-separator">
+        <div class="container-row">
+            <div class="container-name-container">@Html.DisplayFor(m => container.Command)</div>
+            <div class="container-name-container">@Html.DisplayFor(m => container.Created)</div>
+            <div class="container-name-container">@Html.DisplayFor(m => container.Id)</div>
+            <div class="container-name-container">@Html.DisplayFor(m => container.Image)</div>
+            <div class="container-name-container">@Html.DisplayFor(m => container.Name)</div>
+            <div class="container-name-container">@Html.DisplayFor(m => container.Status)</div>
+        </div>
+    }
+</div>

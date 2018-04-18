@@ -1,4 +1,5 @@
-﻿using Grob.Entities.Docker;
+﻿using Grob.Agent.Models;
+using Grob.Entities.Docker;
 using Grob.Entities.Grob;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Grob.ServiceFabric.Web.Models
 {
-    public class TaskIndexModel
+    public class TaskViewModel
     {
-        public List<Container> Containers { get; set; }
+        
         public List<GrobTask> Tasks { get; set; }
     }
 }
