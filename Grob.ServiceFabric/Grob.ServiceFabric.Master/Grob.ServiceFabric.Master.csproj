@@ -90,6 +90,8 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgentRepository\IAgentRepository.cs" />
+    <Compile Include="AgentRepository\ServiceFabricAgentRepository.cs" />
     <Compile Include="ContainerRepository\ServiceFabricContainerRepository.cs" />
     <Compile Include="ContainerRepository\IContainerRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +109,10 @@
     <ProjectReference Include="..\Grob.Agent.Models\Grob.Agent.Models.csproj">
       <Project>{0743107d-ccf2-4da3-b71b-44857189dc26}</Project>
       <Name>Grob.Agent.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Grob.Constants\Grob.Constants.csproj">
+      <Project>{EB1A54AC-29DC-448F-8F8C-01928F0E0824}</Project>
+      <Name>Grob.Constants</Name>
     </ProjectReference>
     <ProjectReference Include="..\Grob.Entities\Grob.Entities.csproj">
       <Project>{CFDBC2E9-ACA0-4FF8-BA22-2E943355CD4D}</Project>

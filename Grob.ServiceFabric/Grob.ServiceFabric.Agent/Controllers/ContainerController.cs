@@ -21,5 +21,11 @@
         {
             return await _dockerManager.ListContainers();
         }
+
+        [HttpPost]
+        public async void CreateContainer()
+        {
+
+        }
     }
 }

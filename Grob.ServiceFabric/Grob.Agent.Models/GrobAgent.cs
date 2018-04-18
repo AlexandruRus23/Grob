@@ -11,14 +11,16 @@ using Newtonsoft.Json;
 namespace Grob.Agent.Models
 {
     public class GrobAgent : IGrobAgentService
-    {        
+    {
+        public Guid AgentGuid { get; set; }
         public string Uri { get; set; }
         public string Name { get; set; }
 
-        public GrobAgent(string name, string uri)
+        public GrobAgent(string name, string uri, Guid agentGuid)
         {
             Name = name;
             Uri = uri;
+            AgentGuid = agentGuid;
         }
 
         public GrobAgent()

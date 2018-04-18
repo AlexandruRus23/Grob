@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
+using Grob.Constants;
 
 namespace Grob.ServiceFabric.Scheduler.JobRepository
 {
-    public class ServiceFabricJobRepository : IJobRepository
-    {
-        private const string TASK_COLLECTION = "GrobJobs";
+    public class ServiceFabricTaskRepository : ITaskRepository
+    {        
         private IReliableStateManager _stateManager;
 
-        public ServiceFabricJobRepository(IReliableStateManager stateManager)
+        public ServiceFabricTaskRepository(IReliableStateManager stateManager)
         {
             _stateManager = stateManager;
         }
 
         public async Task AddTask(GrobTask task)
         {
-            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(TASK_COLLECTION);
+            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(RepositoryConstants.TASK_REPOSITORY);
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -34,7 +34,7 @@ namespace Grob.ServiceFabric.Scheduler.JobRepository
 
         public async Task<IEnumerable<GrobTask>> GetTasks()
         {
-            var tasks = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(TASK_COLLECTION);
+            var tasks = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(RepositoryConstants.TASK_REPOSITORY);
             var result = new List<GrobTask>();
 
             using (var tx = _stateManager.CreateTransaction())

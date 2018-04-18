@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Grob.ServiceFabric.Scheduler.JobRepository
 {
-    interface IJobRepository
+    interface ITaskRepository
     {
         Task AddTask(GrobTask job);
         Task<IEnumerable<GrobTask>> GetTasks();

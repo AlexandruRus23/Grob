@@ -21,13 +21,13 @@ namespace Grob.ServiceFabric.Scheduler
     /// </summary>
     internal sealed class Scheduler : StatefulService, IGrobSchedulerService
     {
-        private IJobRepository _jobRepository;
+        private ITaskRepository _jobRepository;
         private IGrobMasterService _grobMaster;
 
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
-            _jobRepository = new JobRepository.ServiceFabricJobRepository(this.StateManager);
+            _jobRepository = new JobRepository.ServiceFabricTaskRepository(this.StateManager);
             _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }        
 
