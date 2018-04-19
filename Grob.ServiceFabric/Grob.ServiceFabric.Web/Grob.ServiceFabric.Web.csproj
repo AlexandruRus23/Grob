@@ -33,4 +33,12 @@
     <ProjectReference Include="..\Grob.Scheduler.Models\Grob.Scheduler.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Archives\" />
+  </ItemGroup>
+
 </Project>

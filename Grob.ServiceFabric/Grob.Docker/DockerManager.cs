@@ -20,6 +20,16 @@ namespace Grob.Docker
             _dockerClient = dockerClientConfiguration.CreateClient();
         }
 
+        public async Task CreateContainerAsync(string path)
+        {
+            var parameters = new CreateContainerParameters()
+            {
+                WorkingDir = path
+            };
+
+            await _dockerClient.Containers.CreateContainerAsync(parameters);
+        }
+
         public async Task<List<Container>> ListContainers()
         {
             var parameters = new ContainersListParameters()

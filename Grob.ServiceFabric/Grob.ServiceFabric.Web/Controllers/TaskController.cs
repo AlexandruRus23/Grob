@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grob.Entities.Grob;
 using Grob.Master.Models;
 using Grob.Scheduler.Models;
 using Grob.ServiceFabric.Web.Models;
+using Grob.ServiceFabric.Web.Models.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.ServiceFabric.Services.Client;
@@ -47,11 +49,12 @@ namespace Grob.ServiceFabric.Web.Controllers
         // POST: Task/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(NewTaskModel newTaskModel)
         {
             try
             {
-                // TODO: Add insert logic here
+                var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ContainerName);
+                _grobSchedulerService.AddTaskAsync(task);
 
                 return RedirectToAction(nameof(Index));
             }

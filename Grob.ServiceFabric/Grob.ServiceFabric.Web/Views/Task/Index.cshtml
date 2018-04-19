@@ -1,23 +1,26 @@
-﻿@model Grob.ServiceFabric.Web.Models.TaskViewModel
+﻿@model Grob.ServiceFabric.Web.Models.Tasks.TaskViewModel
 
 @{
     ViewData["Title"] = "Tasks";
 }
 
-<h2>Tasks</h2>
-
 <div>
-    <div class="containers-container">
-        <div class="containers-name-header">Containers</div>
+    <div>
+        @Html.ActionLink("Add task", "Create", "Task", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
     </div>
-    <div class="containers-list">
-        @foreach (Grob.Entities.Grob.GrobTask task in Model.Tasks)
+
+    <div>
+        <h2>Tasks</h2>
+        <div class="containers-list">
+            @foreach (Grob.Entities.Grob.GrobTask task in Model.Tasks)
         {
             <hr class="container-separator">
             <div class="container-row">
                 <div class="container-name-container">@Html.DisplayFor(m => task.Id)</div>
                 <div class="container-created-container">@Html.DisplayFor(m => task.Name)</div>
+                <div class="container-created-container">@Html.DisplayFor(m => task.ContainerName)</div>
             </div>
-        }
-    </div>   
+    }
+        </div>
+    </div>    
 </div>

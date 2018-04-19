@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grob.ServiceFabric.Scheduler.JobRepository
+namespace Grob.ServiceFabric.Scheduler.TaskRepository
 {
     interface ITaskRepository
     {
         Task AddTask(GrobTask job);
-        Task<IEnumerable<GrobTask>> GetTasks();
+        Task<List<GrobTask>> GetTasks();
     }
 }

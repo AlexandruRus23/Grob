@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Grob.ServiceFabric.Web.Models
+namespace Grob.ServiceFabric.Web.Models.Tasks
 {
     public class TaskViewModel
     {

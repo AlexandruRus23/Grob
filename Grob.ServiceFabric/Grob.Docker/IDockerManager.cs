@@ -9,5 +9,6 @@ namespace Grob.Docker
         Task<List<Container>> ListContainers();
         Task<IEnumerable<Image>> ListImages();
         Task StartContainerAsync(Container containerName);
+        Task CreateContainerAsync(string path);
     }
 }

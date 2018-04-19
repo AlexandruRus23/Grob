@@ -9,17 +9,20 @@ namespace Grob.Entities.Grob
 {
     public class GrobTask
     {
-        public string Name { get; set; }
         public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string ContainerName { get; set; }
 
         public GrobTask()
         {
 
         }
 
-        public GrobTask(string name)
+        public GrobTask(string name, string containerName)
         {
             Name = name;
+            ContainerName = containerName;
+            Id = Guid.NewGuid();
         }
     }
 }

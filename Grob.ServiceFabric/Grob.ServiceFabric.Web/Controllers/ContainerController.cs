@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Grob.Master.Models;
 using Grob.ServiceFabric.Web.Models;
+using Grob.ServiceFabric.Web.Models.Containers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.ServiceFabric.Services.Client;
@@ -11,7 +13,6 @@ using Microsoft.ServiceFabric.Services.Remoting.Client;
 
 namespace Grob.ServiceFabric.Web.Controllers
 {
-    [Route("container")]
     public class ContainerController : Controller
     {
         private IGrobMasterService _grobMasterService;
@@ -48,15 +49,18 @@ namespace Grob.ServiceFabric.Web.Controllers
         // POST: Container/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(NewContainerModel model)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                string archiveName = $"{Guid.NewGuid()}.zip";
+                string archivePath = $"Archives/${archiveName}";
+                FileStream fileStream = new FileStream(archivePath, FileMode.CreateNew);
+                model.Archive.CopyTo(fileStream);
+                fileStream.Close();
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }

@@ -9,6 +9,7 @@ namespace Grob.Scheduler.Models
 {
     public interface IGrobSchedulerService : IService
     {
+        Task AddTaskAsync(GrobTask task);
         Task<List<GrobTask>> GetTasksAsync();
     }
 }

@@ -8,12 +8,12 @@ using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Grob.Entities.Grob;
-using Grob.ServiceFabric.Scheduler.JobRepository;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Client;
 using Grob.Master.Models;
 using Grob.Scheduler.Models;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using Grob.ServiceFabric.Scheduler.TaskRepository;
 
 namespace Grob.ServiceFabric.Scheduler
 {
@@ -22,13 +22,13 @@ namespace Grob.ServiceFabric.Scheduler
     /// </summary>
     internal sealed class Scheduler : StatefulService, IGrobSchedulerService
     {
-        private ITaskRepository _jobRepository;
+        private ITaskRepository _taskRepository;
         private IGrobMasterService _grobMaster;
 
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
-            _jobRepository = new JobRepository.ServiceFabricTaskRepository(this.StateManager);
+            _taskRepository = new ServiceFabricTaskRepository(this.StateManager);
             _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }        
 
@@ -67,7 +67,12 @@ namespace Grob.ServiceFabric.Scheduler
 
         public async Task<List<GrobTask>> GetTasksAsync()
         {
-            return new List<GrobTask>();
+            return await _taskRepository.GetTasks();
+        }
+
+        public async Task AddTaskAsync(GrobTask task)
+        {
+            await _taskRepository.AddTask(task);
         }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Grob.Constants;
 
-namespace Grob.ServiceFabric.Scheduler.JobRepository
+namespace Grob.ServiceFabric.Scheduler.TaskRepository
 {
     public class ServiceFabricTaskRepository : ITaskRepository
     {        
@@ -32,7 +32,7 @@ namespace Grob.ServiceFabric.Scheduler.JobRepository
             }
         }
 
-        public async Task<IEnumerable<GrobTask>> GetTasks()
+        public async Task<List<GrobTask>> GetTasks()
         {
             var tasks = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(RepositoryConstants.TASK_REPOSITORY);
             var result = new List<GrobTask>();

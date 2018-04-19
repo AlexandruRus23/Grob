@@ -1,25 +1,28 @@
-﻿@model Grob.ServiceFabric.Web.Models.ContainerViewModel
+﻿@model Grob.ServiceFabric.Web.Models.Containers.ContainerViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Containers";
 }
 
-<h2>Index</h2>
-
-<div class="containers-container">
-    <div class="containers-name-header">Agents</div>
-</div>
-<div class="containers-list">
-    @foreach (Grob.Entities.Docker.Container container in Model.Containers)
-    {
-        <hr class="container-separator">
-        <div class="container-row">
-            <div class="container-name-container">@Html.DisplayFor(m => container.Command)</div>
-            <div class="container-name-container">@Html.DisplayFor(m => container.Created)</div>
-            <div class="container-name-container">@Html.DisplayFor(m => container.Id)</div>
-            <div class="container-name-container">@Html.DisplayFor(m => container.Image)</div>
-            <div class="container-name-container">@Html.DisplayFor(m => container.Name)</div>
-            <div class="container-name-container">@Html.DisplayFor(m => container.Status)</div>
+<div>
+    <div>
+        @Html.ActionLink("Add container", "create", "container", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+    </div>
+    <div>
+        <h2>Containers</h2>
+        <div class="containers-list">
+            @foreach (Grob.Entities.Docker.Container container in Model.Containers)
+            {
+                <hr class="container-separator">
+                <div class="container-row">
+                    <div class="container-name-container">@Html.DisplayFor(m => container.Command)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => container.Created)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => container.Id)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => container.Image)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => container.Name)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => container.Status)</div>
+                </div>
+            }
         </div>
-    }
+    </div>
 </div>
