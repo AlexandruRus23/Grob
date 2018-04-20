@@ -10,6 +10,11 @@ namespace Grob.Docker
 {
     public class StubDockerManager : IDockerManager
     {
+        public async Task CreateContainerAsync(string path)
+        {
+            return;
+        }
+
         public async Task<List<Container>> ListContainers()
         {
             return new List<Container>();
@@ -23,6 +28,7 @@ namespace Grob.Docker
 
         public async Task StartContainerAsync(Container containerName)
         {
+            return;
         }
     }
 }

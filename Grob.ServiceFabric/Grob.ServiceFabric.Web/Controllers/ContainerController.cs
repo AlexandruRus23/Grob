@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Grob.Master.Models;
@@ -53,11 +54,17 @@ namespace Grob.ServiceFabric.Web.Controllers
         {
             try
             {
-                string archiveName = $"{Guid.NewGuid()}.zip";
+                var guid = Guid.NewGuid();
+                string archiveName = $"{guid}.zip";
                 string archivePath = $"Archives/${archiveName}";
                 FileStream fileStream = new FileStream(archivePath, FileMode.CreateNew);
                 model.Archive.CopyTo(fileStream);
                 fileStream.Close();
+
+                string extractionPath = $"Archives/{guid}";
+                ZipFile.ExtractToDirectory(archivePath, extractionPath);
+                System.IO.File.Delete(archivePath);
+
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception e)
