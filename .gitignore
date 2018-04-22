@@ -247,3 +247,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/Grob.ServiceFabric/Grob.ServiceFabric.Web/Archives

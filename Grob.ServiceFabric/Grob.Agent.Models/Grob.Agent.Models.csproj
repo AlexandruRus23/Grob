@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Docker.DotNet, Version=3.125.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Docker.DotNet.3.125.1\lib\net46\Docker.DotNet.dll</HintPath>
+    <Reference Include="Docker.DotNet, Version=3.125.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Docker.DotNet.3.125.2\lib\net46\Docker.DotNet.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ServiceFabric.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
       <HintPath>..\packages\Microsoft.ServiceFabric.Data.3.0.480\lib\net45\Microsoft.ServiceFabric.Data.dll</HintPath>

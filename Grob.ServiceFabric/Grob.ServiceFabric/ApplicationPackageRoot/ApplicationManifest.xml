@@ -16,6 +16,9 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Grob.ServiceFabric.WebPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
+    <Policies>
+      <RunAsPolicy CodePackageRef="Code" UserRef="LocalSystem" />
+    </Policies>
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="Grob.ServiceFabric.MasterPkg" ServiceManifestVersion="1.0.0" />

@@ -17,12 +17,12 @@ namespace Grob.Entities.Docker
 
         public Container(string command, DateTime created, string id, string image, string name, string status)
         {
-            this.Command = command;
-            this.Created = created;
+            Command = command;
+            Created = created;
             Id = id;
-            this.Image = image;
-            this.Name = name;
-            this.Status = status;
+            Image = image;
+            Name = name;
+            Status = status;
         }
 
         public Container()

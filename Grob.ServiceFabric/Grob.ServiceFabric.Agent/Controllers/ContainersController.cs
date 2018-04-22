@@ -2,16 +2,17 @@
 {
     using Grob.Docker;
     using Grob.Entities.Docker;
+    using Grob.Entities.Grob;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
 
-    [Route("container")]
-    public class ContainerController : ApiController
+    [Route("containers")]
+    public class ContainersController : ApiController
     {
         private DockerManager _dockerManager;
 
-        public ContainerController()
+        public ContainersController()
         {
             _dockerManager = new DockerManager();
         }
@@ -23,9 +24,9 @@
         }
 
         [HttpPost]
-        public async void CreateContainer()
+        public async void CreateContainer([FromBody] GrobTask grobTask)
         {
-
+            await _dockerManager.CreateContainerAsync(grobTask);
         }
     }
 }

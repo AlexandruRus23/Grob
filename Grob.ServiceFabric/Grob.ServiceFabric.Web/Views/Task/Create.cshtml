@@ -17,10 +17,13 @@
                 <input asp-for="TaskName" class="form-control" />
                 <span asp-validation-for="TaskName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ContainerName" class="control-label"></label>
-                <input asp-for="ContainerName" class="form-control" />
-                <span asp-validation-for="ContainerName" class="text-danger"></span>
+            @*<div class="form-group">
+            <label asp-for="ApplicationName" class="control-label"></label>
+            <input asp-for="ApplicationName" class="form-control" />
+            <span asp-validation-for="ApplicationName" class="text-danger"></span>
+        </div>*@
+            <div>
+                @Html.DropDownListFor(m => m.ApplicationName, Model.RegisteredApplications, "Select application", null)
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

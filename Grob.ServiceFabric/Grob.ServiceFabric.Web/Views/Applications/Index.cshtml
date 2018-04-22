@@ -1,0 +1,28 @@
+﻿@model Grob.ServiceFabric.Web.Models.Applications.ApplicationsIndexModel
+
+@{
+    ViewData["Title"] = "Applications";
+}
+
+<div>
+    <div>
+        @Html.ActionLink("Add application", "create", "applications", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+    </div>
+    <div>
+        <h2>Containers</h2>
+        <div class="containers-list">
+            @foreach (Grob.Entities.Docker.Application application in Model.Applications)
+            {
+                <hr class="container-separator">
+                <div class="container-row">
+                    <div class="container-name-container">@Html.DisplayFor(m => application.Created)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => application.ID)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => application.Name)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => application.Size)</div>
+                    <div class="container-name-container">@Html.DisplayFor(m => application.Containers)</div>                    
+                    @*@Html.ActionLink("Delete", "delete", "applications", routeValues: null, htmlAttributes: new { @class = "btn btn-danger" })*@
+                </div>
+            }
+        </div>
+    </div>
+</div>

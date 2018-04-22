@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace Grob.Entities.Docker
 {
-    public class Image
+    public class Application
     {
-        public IList<string> RepoTags { get; set; }
+        public string Name { get; set; }
         public DateTime Created { get; set; }
         public string ID { get; set; }
         public long Containers { get; set; }
         public long Size { get; set; }
 
-        public Image(IList<string> repoTags, DateTime created, string iD, long containers, long size)
+        public Application(string name, DateTime created, string iD, long containers, long size)
         {
-            this.RepoTags = repoTags;
+            this.Name = name;
             this.Created = created;
             this.ID = iD;
             this.Containers = containers;
             this.Size = size;
         }
 
-        public Image()
+        public Application()
         {
 
         }

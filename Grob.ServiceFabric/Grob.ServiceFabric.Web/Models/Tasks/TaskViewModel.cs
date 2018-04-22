@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 namespace Grob.ServiceFabric.Web.Models.Tasks
 {
     public class TaskViewModel
-    {
-        
+    {        
         public List<GrobTask> Tasks { get; set; }
     }
 }

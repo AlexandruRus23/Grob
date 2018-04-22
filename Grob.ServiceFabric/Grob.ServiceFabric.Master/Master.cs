@@ -16,6 +16,7 @@ using Grob.ServiceFabric.Master.ContainerRepository;
 using Grob.Entities.Docker;
 using Microsoft.ServiceFabric.Services.Client;
 using Grob.ServiceFabric.Master.AgentRepository;
+using System.IO;
 
 namespace Grob.ServiceFabric.Master
 {
@@ -82,6 +83,24 @@ namespace Grob.ServiceFabric.Master
         public async Task<List<GrobAgent>> GetGrobAgentsAsync()
         {
             return await _grobAgentRepository.GetGrobAgentsAsync();
+        }
+
+        private async Task<GrobAgent> GetLeastUsedAgentAsync()
+        {
+            var allAgents = await _grobAgentRepository.GetGrobAgentsAsync();
+            return allAgents.FirstOrDefault();
+        }
+
+        public async Task<List<Application>> GetApplicationsAsync()
+        {
+            var agent = await GetLeastUsedAgentAsync();
+            return agent.GetApplications();
+        }
+
+        public async Task CreateContainerForTask(GrobTask grobTask)
+        {
+            var agents = await _grobAgentRepository.GetGrobAgentsAsync();
+            agents.ForEach(a => a.CreateContainers(grobTask));
         }
     }
 }

@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Grob.Docker\Grob.Docker.csproj" />
     <ProjectReference Include="..\Grob.Entities\Grob.Entities.csproj" />
     <ProjectReference Include="..\Grob.Master.Models\Grob.Master.Models.csproj" />
     <ProjectReference Include="..\Grob.Scheduler.Models\Grob.Scheduler.Models.csproj" />

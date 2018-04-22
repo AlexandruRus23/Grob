@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Docker\Container.cs" />
-    <Compile Include="Docker\Image.cs" />
+    <Compile Include="Docker\Application.cs" />
     <Compile Include="Grob\GrobTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

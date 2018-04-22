@@ -24,11 +24,11 @@ namespace DockerAPIConsoleApp
 				Console.WriteLine($"Image: {container.Image}. Tag: {container.Id}. Created At: {container.Created}");
 			}
 
-			var imagesList = client.ListImages().Result;
+			var imagesList = client.ListImagesAsync().Result;
 
 			foreach(var image in imagesList)
 			{
-				Console.WriteLine($"Image: {image.RepoTags.FirstOrDefault()}. Created: {image.Created}");
+				Console.WriteLine($"Image: {image.Name.FirstOrDefault()}. Created: {image.Created}");
 			}
 
 			Console.ReadKey();
