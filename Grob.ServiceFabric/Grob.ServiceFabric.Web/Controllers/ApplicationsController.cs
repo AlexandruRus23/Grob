@@ -76,9 +76,13 @@ namespace Grob.ServiceFabric.Web.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return View();
+            }
+            finally
+            {
+                Directory.Delete(containerPath, true);
             }
         }
 

@@ -43,6 +43,7 @@
     <Compile Include="Docker\Container.cs" />
     <Compile Include="Docker\Application.cs" />
     <Compile Include="Grob\GrobTask.cs" />
+    <Compile Include="Grob\ScheduleTypesEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

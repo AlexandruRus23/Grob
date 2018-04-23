@@ -12,6 +12,8 @@ namespace Grob.Entities.Grob
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string ApplicationName { get; set; }
+        public ScheduleTypesEnum ScheduleType { get; set; }
+        public string ScheduleInfo { get; set; }
 
         public GrobTask()
         {

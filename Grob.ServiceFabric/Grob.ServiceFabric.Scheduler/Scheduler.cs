@@ -14,6 +14,7 @@ using Grob.Master.Models;
 using Grob.Scheduler.Models;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Grob.ServiceFabric.Scheduler.TaskRepository;
+using Grob.ServiceFabric.Scheduler.Schedule;
 
 namespace Grob.ServiceFabric.Scheduler
 {
@@ -73,6 +74,8 @@ namespace Grob.ServiceFabric.Scheduler
         public async Task AddTaskAsync(GrobTask task)
         {
             await _taskRepository.AddTask(task);
+            var runner = SchedulerFactory.GetScheduler(task);
+            runner.Start();            
         }
     }
 }
