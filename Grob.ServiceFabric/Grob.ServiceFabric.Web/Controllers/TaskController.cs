@@ -31,7 +31,7 @@ namespace Grob.ServiceFabric.Web.Controllers
         {
             var model = new TaskViewModel
             {
-                Tasks = _grobSchedulerService.GetTasksAsync().Result
+                Tasks = _grobSchedulerService.GetTasksAsync().Result.OrderBy(t => t.CreationTime).ToList()
             };
 
             return View("Index", model);
@@ -47,11 +47,19 @@ namespace Grob.ServiceFabric.Web.Controllers
         public IActionResult Create()
         {
             var model = new NewTaskModel();
+
             var applications = _grobMasterService.GetApplicationsAsync().Result;
             applications.ForEach(a => model.RegisteredApplications.Add(new SelectListItem()
             {
                 Text = a.Name,
                 Value = a.Name
+            }));
+
+            var scheduleTypes = Enum.GetValues(typeof(ScheduleTypesEnum)).Cast<ScheduleTypesEnum>().ToList();
+            scheduleTypes.ForEach(s => model.ScheduleTypes.Add(new SelectListItem()
+            {
+                Text = s.ToString(),
+                Value = s.ToString()
             }));
 
             return View(model);
@@ -64,7 +72,7 @@ namespace Grob.ServiceFabric.Web.Controllers
         {
             try
             {                
-                var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName);
+                var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName, newTaskModel.ScheduleType, newTaskModel.ScheduleInfo);
                 _grobMasterService.CreateContainerForTask(task);
                 _grobSchedulerService.AddTaskAsync(task);
                 return RedirectToAction(nameof(Index));

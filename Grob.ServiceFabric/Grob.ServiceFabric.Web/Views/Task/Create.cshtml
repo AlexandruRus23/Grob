@@ -25,6 +25,14 @@
             <div>
                 @Html.DropDownListFor(m => m.ApplicationName, Model.RegisteredApplications, "Select application", null)
             </div>
+            <div>
+                @Html.DropDownListFor(m => m.ScheduleType, Model.ScheduleTypes, "Select schedule type", null)
+            </div>
+            <div class="form-group">
+                <label asp-for="ScheduleInfo" class="control-label"></label>
+                <input asp-for="ScheduleInfo" class="form-control" />
+                <span asp-validation-for="ScheduleInfo" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>

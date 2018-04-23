@@ -74,8 +74,10 @@ namespace Grob.ServiceFabric.Scheduler
         public async Task AddTaskAsync(GrobTask task)
         {
             await _taskRepository.AddTask(task);
-            var runner = SchedulerFactory.GetScheduler(task);
-            runner.Start();            
+            var runner = SchedulerFactory.GetScheduler(task, _grobMaster);
+
+            Thread thread = new Thread(runner.Start);
+            thread.Start();            
         }
     }
 }

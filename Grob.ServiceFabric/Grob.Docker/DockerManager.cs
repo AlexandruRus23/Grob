@@ -28,7 +28,7 @@ namespace Grob.Docker
             var parameters = new CreateContainerParameters()
             {
                 Image = grobTask.ApplicationName,
-                Name = grobTask.Name
+                Name = grobTask.Name.ToLower().Replace(" ", string.Empty)
             };
 
             await _dockerClient.Containers.CreateContainerAsync(parameters);

@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Http;
 
-    [Route("containers")]
+    
     public class ContainersController : ApiController
     {
         private DockerManager _dockerManager;
@@ -17,16 +17,22 @@
             _dockerManager = new DockerManager();
         }
 
-        [HttpGet]
+        [Route("containers") , HttpGet]
         public async Task<List<Container>> GetContainers()
         {
             return await _dockerManager.ListContainers();
         }
 
-        [HttpPost]
+        [Route("containers"), HttpPost]
         public async void CreateContainer([FromBody] GrobTask grobTask)
         {
             await _dockerManager.CreateContainerAsync(grobTask);
+        }
+
+        [Route("containers/start"), HttpPost]
+        public async void RunContainer([FromBody] Container container)
+        {
+            await _dockerManager.StartContainerAsync(container);
         }
     }
 }

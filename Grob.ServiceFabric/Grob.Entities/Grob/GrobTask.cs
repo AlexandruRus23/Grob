@@ -14,17 +14,22 @@ namespace Grob.Entities.Grob
         public string ApplicationName { get; set; }
         public ScheduleTypesEnum ScheduleType { get; set; }
         public string ScheduleInfo { get; set; }
+        public DateTime CreationTime { get; set; }
+        public DateTime LastRunTime { get; set; }
 
         public GrobTask()
         {
 
         }
 
-        public GrobTask(string name, string applicationName)
+        public GrobTask(string name, string applicationName, ScheduleTypesEnum scheduleType, string scheduleInfo)
         {
+            Id = Guid.NewGuid();
             Name = name;
             ApplicationName = applicationName;
-            Id = Guid.NewGuid();
+            ScheduleType = scheduleType;
+            ScheduleInfo = scheduleInfo;
+            CreationTime = DateTime.Now;
         }
     }
 }

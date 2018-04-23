@@ -52,9 +52,9 @@ namespace Grob.ServiceFabric.Master
 
         public async Task RunTask(GrobTask task)
         {
-            var containers = await _containerRepository.GetAllContainersAsync();
+            var containers = await GetContainersAsync();
 
-            var container = containers.Where(c => c.Image == task.Name)?.FirstOrDefault();
+            var container = containers.Where(c => c.Name == $"/{task.Name.ToLower().Replace(" ", string.Empty)}")?.FirstOrDefault();
 
             if (container != null)
             {

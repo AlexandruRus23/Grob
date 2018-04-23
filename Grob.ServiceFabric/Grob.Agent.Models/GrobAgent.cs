@@ -39,7 +39,12 @@ namespace Grob.Agent.Models
 
         public void RunContainer(Container container)
         {
-            throw new NotImplementedException();
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + $"containers/start")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(container), Encoding.UTF8, "application/json")
+            };
+            var result = client.SendAsync(request).Result;
         }
 
         public List<Application> GetApplications()

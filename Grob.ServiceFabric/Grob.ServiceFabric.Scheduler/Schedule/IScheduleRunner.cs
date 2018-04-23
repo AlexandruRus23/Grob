@@ -9,6 +9,6 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
     public interface IScheduleRunner
     {
         void Start();
-        Task RunAsync();
+        void RunAsync();
     }
 }
