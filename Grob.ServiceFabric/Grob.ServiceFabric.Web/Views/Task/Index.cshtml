@@ -6,21 +6,26 @@
 
 <div>
     <div>
-        @Html.ActionLink("Add task", "Create", "Task", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+        @Html.ActionLink("Add task", "Create", "Task", routeValues: null, htmlAttributes: new { @class = "btn  btn-success" })
     </div>
 
     <div>
         <h2>Tasks</h2>
         <div class="containers-list">
             @foreach (Grob.Entities.Grob.GrobTask task in Model.Tasks)
-        {
-            <hr class="container-separator">
-            <div class="container-row">
-                <div class="container-name-container">@Html.DisplayFor(m => task.CreationTime)</div>
-                <div class="container-created-container">@Html.DisplayFor(m => task.Name)</div>
-                <div class="container-created-container">@Html.DisplayFor(m => task.ApplicationName)</div>
-            </div>
-    }
+            {
+                <hr class="container-separator">
+                <div class="container-row">
+                    <div class="container-name-container">@Html.DisplayFor(m => task.CreationTime)</div>
+                    <div class="container-created-container">@Html.DisplayFor(m => task.Name)</div>
+                    <div class="container-created-container">@Html.DisplayFor(m => task.ApplicationName)</div>
+                </div>
+
+                @using (Html.BeginForm(actionName: "delete", controllerName: "task", routeValues: new { taskId = task.Id }))
+                {
+                    <input type="submit" class="btn btn-danger" value="Delete" />
+                }
+            }
         </div>
-    </div>    
+    </div>
 </div>

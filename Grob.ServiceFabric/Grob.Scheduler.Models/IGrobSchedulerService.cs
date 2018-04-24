@@ -1,6 +1,7 @@
 ﻿using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.FabricTransport;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +12,6 @@ namespace Grob.Scheduler.Models
     {
         Task AddTaskAsync(GrobTask task);
         Task<List<GrobTask>> GetTasksAsync();
+        Task DeleteTaskAsync(Guid taskId);
     }
 }

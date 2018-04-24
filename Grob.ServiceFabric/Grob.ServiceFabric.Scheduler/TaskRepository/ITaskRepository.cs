@@ -10,5 +10,6 @@ namespace Grob.ServiceFabric.Scheduler.TaskRepository
     {
         Task AddTask(GrobTask job);
         Task<List<GrobTask>> GetTasks();
+        Task DeleteTaskAsync(Guid taskId);
     }
 }

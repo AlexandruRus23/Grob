@@ -73,11 +73,19 @@ namespace Grob.ServiceFabric.Scheduler
 
         public async Task AddTaskAsync(GrobTask task)
         {
+            // TO DO: RUNNER SERVICE FABRIC REPOSITORY 
             await _taskRepository.AddTask(task);
             var runner = SchedulerFactory.GetScheduler(task, _grobMaster);
 
             Thread thread = new Thread(runner.Start);
             thread.Start();            
+        }
+
+        public async Task DeleteTaskAsync(Guid taskId)
+        {
+            var task = GetTasksAsync().Result.Where(t => t.Id == taskId).FirstOrDefault();
+            await _taskRepository.DeleteTaskAsync(taskId);
+            await _grobMaster.DeleteContainerForTaskAsync(task);
         }
     }
 }

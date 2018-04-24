@@ -28,7 +28,7 @@ namespace Grob.Docker
             var parameters = new CreateContainerParameters()
             {
                 Image = grobTask.ApplicationName,
-                Name = grobTask.Name.ToLower().Replace(" ", string.Empty)
+                Name = GetContainerName(grobTask)
             };
 
             await _dockerClient.Containers.CreateContainerAsync(parameters);
@@ -58,25 +58,38 @@ namespace Grob.Docker
 
                 var output = process.StandardOutput.ReadToEnd();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
-            }            
+            }
         }
 
-        public async Task CreateImageAsync(Stream contents, string dockerFilePath,string name)
+        public async Task CreateImageAsync(Stream contents, string dockerFilePath, string name)
         {
             var parameters = new ImageBuildParameters()
             {
                 Dockerfile = dockerFilePath,
                 Tags = new List<string>() { name.ToLower() },
-                                
+
             };
 
             await _dockerClient.Images.BuildImageFromDockerfileAsync(contents, parameters);
         }
 
-
+        public async Task DeleteContainerAsync(GrobTask grobTask)
+        {
+            var containers = await ListContainers();
+            var containerToDelete = containers.Where(c => c.Name == GetContainerName(grobTask)).FirstOrDefault();
+            if (containerToDelete != null)
+            {
+                await _dockerClient.Containers.RemoveContainerAsync(containerToDelete.Id, new ContainerRemoveParameters()
+                {
+                    //RemoveVolumes = true,
+                    //Force = true,
+                    //RemoveLinks = true
+                });
+            }
+        }
 
         public async Task<List<Container>> ListContainers()
         {
@@ -91,7 +104,7 @@ namespace Grob.Docker
 
             foreach (var container in containers)
             {
-                result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault(), container.Status));
+                result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault().Substring(1), container.Status));
             }
 
             return result;
@@ -119,6 +132,11 @@ namespace Grob.Docker
         public async Task StartContainerAsync(Container container)
         {
             await _dockerClient.Containers.StartContainerAsync(container.Id, new ContainerStartParameters());
+        }
+
+        private string GetContainerName(GrobTask grobTask)
+        {
+            return grobTask.Name.ToLower().Replace(" ", string.Empty);
         }
     }
 }

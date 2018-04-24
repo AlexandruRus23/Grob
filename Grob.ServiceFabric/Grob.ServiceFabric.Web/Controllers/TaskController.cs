@@ -37,12 +37,6 @@ namespace Grob.ServiceFabric.Web.Controllers
             return View("Index", model);
         }
 
-        // GET: Task/Details/5
-        public IActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: Task/Create
         public IActionResult Create()
         {
@@ -68,59 +62,29 @@ namespace Grob.ServiceFabric.Web.Controllers
         // POST: Task/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(NewTaskModel newTaskModel)
+        public async Task<ActionResult> Create(NewTaskModel newTaskModel)
         {
             try
             {                
                 var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName, newTaskModel.ScheduleType, newTaskModel.ScheduleInfo);
-                _grobMasterService.CreateContainerForTask(task);
-                _grobSchedulerService.AddTaskAsync(task);
+                _grobMasterService.CreateContainerForTaskAsync(task);
+                await _grobSchedulerService.AddTaskAsync(task);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }
-        }
-
-        // GET: Task/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Task/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Task/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
         }
 
         // POST: Task/Delete/5
-        [HttpPost]
+        [Route("/delete/{taskId}"), HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(Guid taskId)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                await _grobSchedulerService.DeleteTaskAsync(taskId);
                 return RedirectToAction(nameof(Index));
             }
             catch

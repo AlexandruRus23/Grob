@@ -29,6 +29,12 @@
             await _dockerManager.CreateContainerAsync(grobTask);
         }
 
+        [Route("containers"), HttpDelete]
+        public async void DeleteContainer([FromBody] GrobTask grobTask)
+        {
+            await _dockerManager.DeleteContainerAsync(grobTask);
+        }
+
         [Route("containers/start"), HttpPost]
         public async void RunContainer([FromBody] Container container)
         {

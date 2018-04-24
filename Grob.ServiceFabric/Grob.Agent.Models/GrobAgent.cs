@@ -66,5 +66,15 @@ namespace Grob.Agent.Models
             };
             var result = client.SendAsync(request).Result;
         }
+
+        public void DeleteContainers(GrobTask grobTask)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Delete, Uri.ToString() + "containers")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(grobTask), Encoding.UTF8, "application/json")
+            };
+            var result = client.SendAsync(request).Result;
+        }
     }
 }

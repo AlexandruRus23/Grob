@@ -97,10 +97,15 @@ namespace Grob.ServiceFabric.Master
             return agent.GetApplications();
         }
 
-        public async Task CreateContainerForTask(GrobTask grobTask)
+        public async Task CreateContainerForTaskAsync(GrobTask grobTask)
         {
             var agents = await _grobAgentRepository.GetGrobAgentsAsync();
             agents.ForEach(a => a.CreateContainers(grobTask));
+        }
+
+        public async Task DeleteContainerForTaskAsync(GrobTask grobTask)
+        {
+            _grobAgentRepository.GetGrobAgentsAsync().Result.ForEach(a => a.DeleteContainers(grobTask));
         }
     }
 }

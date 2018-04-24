@@ -2,20 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grob.Entities.Grob
 {
     public class GrobTask
     {
+        private Thread Runner;
+
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string ApplicationName { get; set; }
         public ScheduleTypesEnum ScheduleType { get; set; }
         public string ScheduleInfo { get; set; }
         public DateTime CreationTime { get; set; }
-        public DateTime LastRunTime { get; set; }
+        public DateTime LastRunTime { get; set; }        
 
         public GrobTask()
         {

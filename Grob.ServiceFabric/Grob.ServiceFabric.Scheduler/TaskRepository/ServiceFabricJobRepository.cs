@@ -32,6 +32,18 @@ namespace Grob.ServiceFabric.Scheduler.TaskRepository
             }
         }
 
+        public async Task DeleteTaskAsync(Guid taskId)
+        {
+            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(RepositoryConstants.TASK_REPOSITORY);
+
+            using (var tx = _stateManager.CreateTransaction())
+            {
+                await grobJobs.TryRemoveAsync(tx, taskId);
+
+                await tx.CommitAsync();
+            }
+        }
+
         public async Task<List<GrobTask>> GetTasks()
         {
             var tasks = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(RepositoryConstants.TASK_REPOSITORY);

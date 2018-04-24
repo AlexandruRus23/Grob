@@ -12,5 +12,6 @@ namespace Grob.Agent.Models
         List<Container> GetContainers();
         List<Application> GetApplications();
         void CreateContainers(GrobTask grobTask);
+        void DeleteContainers(GrobTask grobTask);
     }
 }
