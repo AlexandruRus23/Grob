@@ -54,7 +54,7 @@ namespace Grob.ServiceFabric.Master
         {
             var containers = await GetContainersAsync();
 
-            var container = containers.Where(c => c.Name == $"/{task.Name.ToLower().Replace(" ", string.Empty)}")?.FirstOrDefault();
+            var container = containers.Where(c => c.Name == task.Name.ToLower().Replace(" ", string.Empty))?.FirstOrDefault();
 
             if (container != null)
             {

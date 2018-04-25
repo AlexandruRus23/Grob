@@ -8,7 +8,7 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
 {
     public static class SchedulerFactory
     {
-        public static IScheduleRunner GetScheduler(GrobTask grobTask, IGrobMasterService grobMasterService)
+        public static IScheduleRunner GetRunner(GrobTask grobTask, IGrobMasterService grobMasterService)
         {
             switch (grobTask.ScheduleType)
             {

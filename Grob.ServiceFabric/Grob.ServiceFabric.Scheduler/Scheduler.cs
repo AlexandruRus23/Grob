@@ -15,6 +15,7 @@ using Grob.Scheduler.Models;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Grob.ServiceFabric.Scheduler.TaskRepository;
 using Grob.ServiceFabric.Scheduler.Schedule;
+using Grob.ServiceFabric.Scheduler.RunnerRepository;
 
 namespace Grob.ServiceFabric.Scheduler
 {
@@ -24,12 +25,17 @@ namespace Grob.ServiceFabric.Scheduler
     internal sealed class Scheduler : StatefulService, IGrobSchedulerService
     {
         private ITaskRepository _taskRepository;
+        private IRunnerRepository _runnerRepository;
         private IGrobMasterService _grobMaster;
 
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
             _taskRepository = new ServiceFabricTaskRepository(this.StateManager);
+
+            //_runnerRepository = new ServiceFabricRunnerRepository(this.StateManager);
+            _runnerRepository = new SimpleRunnerRepository();
+
             _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }        
 
@@ -72,13 +78,10 @@ namespace Grob.ServiceFabric.Scheduler
         }
 
         public async Task AddTaskAsync(GrobTask task)
-        {
-            // TO DO: RUNNER SERVICE FABRIC REPOSITORY 
+        {            
             await _taskRepository.AddTask(task);
-            var runner = SchedulerFactory.GetScheduler(task, _grobMaster);
-
-            Thread thread = new Thread(runner.Start);
-            thread.Start();            
+            var runner = SchedulerFactory.GetRunner(task, _grobMaster);
+            await _runnerRepository.AddRunnerAsync(runner);
         }
 
         public async Task DeleteTaskAsync(Guid taskId)
@@ -86,6 +89,9 @@ namespace Grob.ServiceFabric.Scheduler
             var task = GetTasksAsync().Result.Where(t => t.Id == taskId).FirstOrDefault();
             await _taskRepository.DeleteTaskAsync(taskId);
             await _grobMaster.DeleteContainerForTaskAsync(task);
+            await _runnerRepository.StopRunner(task.Id);
         }
+
+        // SCOATE SCHEDULE TYPES INTR-UN PROIECT CA SA POTI SA REFERENTIEZI DIN GROBTASK CA DUPA SA AI ACCES LA NEXT SI LAST RUN
     }
 }
