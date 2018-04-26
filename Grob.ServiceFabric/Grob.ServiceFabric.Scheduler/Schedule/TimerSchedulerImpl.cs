@@ -14,8 +14,6 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
     public class TimerSchedulerImpl : IScheduleRunner
     {
         public Guid Id { get; set; }
-        public DateTime NextRun { get; set; }
-        public DateTime LastRun { get; set; }
 
         private bool _isRunning; 
 
@@ -26,7 +24,7 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
         {
             _grobTask = grobTask;
             _grobMasterService = grobMasterService;
-            _isRunning = true;
+            _isRunning = true;            
             Id = grobTask.Id;
 
             var thread = new Thread(Start);
@@ -39,7 +37,7 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
             {
                 var schedule = CrontabSchedule.Parse(_grobTask.ScheduleInfo);
                 var nextRun = schedule.GetNextOccurrence(DateTime.Now);
-                NextRun = nextRun;
+                _grobTask.NextRunTime = nextRun.ToString();
 
                 var sleepTime = nextRun.Subtract(DateTime.Now);
                 Thread.Sleep(sleepTime);
@@ -56,7 +54,7 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
 
         public void RunAsync()
         {
-            LastRun = DateTime.Now;
+            _grobTask.LastRunTime = DateTime.Now.ToString();
             _grobMasterService.RunTask(_grobTask);
         }
 

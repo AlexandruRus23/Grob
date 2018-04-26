@@ -8,6 +8,6 @@ namespace Grob.ServiceFabric.Web.Models
 {
     public class IndexViewModel
     {
-        public List<GrobAgentHttpClient> GrobAgents { get; set; }
+        public List<GrobAgent> GrobAgents { get; set; }
     }
 }

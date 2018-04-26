@@ -20,6 +20,7 @@ using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Client;
 using System.Fabric.Description;
 using System.Text;
+using System.Diagnostics;
 
 namespace Grob.ServiceFabric.Agent
 {
@@ -32,13 +33,18 @@ namespace Grob.ServiceFabric.Agent
         private IGrobMasterService _grobMasterService;
         private OwinCommunicationListener communicationListener;
 
+        private PerformanceCounter cpuCounter;
+        private PerformanceCounter ramCounter;
+
         public Agent(StatelessServiceContext context)
             : base(context)
         {
-            _dockerManager = new StubDockerManager();
-            //_dockerManager = new DockerManager();
+            //_dockerManager = new StubDockerManager();
+            _dockerManager = new DockerManager();
 
             _grobMasterService = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
+            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            ramCounter = new PerformanceCounter("Memory", "Available MBytes");
         }
 
         /// <summary>
@@ -66,8 +72,20 @@ namespace Grob.ServiceFabric.Agent
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            var grobAgent = new GrobAgentHttpClient(Environment.MachineName, communicationListener.GrobAgentAddress, Context.InstanceId, Context.NodeContext.NodeName);
+            var grobAgent = new GrobAgent(Environment.MachineName, communicationListener.GrobAgentAddress, Context.InstanceId, Context.NodeContext.NodeName);
             await _grobMasterService.RegisterAgentAsync(grobAgent);
+
+            while (true)
+            {
+                var agentInformation = new AgentInformation()
+                {
+                    CpuUsage = cpuCounter.NextValue().ToString(),
+                    AvailableMemory = ramCounter.NextValue().ToString()
+                };
+
+                AgentResourceUtilization.AddAgentInformation(agentInformation);
+                Thread.Sleep(1000);
+            }
         }
 
         public async Task RunContainerAsync(Container container)

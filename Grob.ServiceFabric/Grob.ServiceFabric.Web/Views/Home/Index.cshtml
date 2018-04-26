@@ -8,12 +8,14 @@
     <div class="containers-name-header">Agents</div>
 </div>
 <div class="containers-list">
-    @foreach (Grob.Agent.Models.GrobAgentHttpClient agent in Model.GrobAgents)
+    @foreach (Grob.Agent.Models.GrobAgent agent in Model.GrobAgents)
     {
         <hr class="container-separator">
-        <div class="container-row">            
-            <div class="container-name-container">@Html.DisplayFor(m => agent.Name)</div>
-            <div class="container-created-container">@Html.DisplayFor(m => agent.Uri)</div>
+        <div class="container-row">
+            <div class="container-name-container">Name: @Html.DisplayFor(m => agent.Name)</div>
+            <div class="container-created-container">Uri: @Html.DisplayFor(m => agent.Uri)</div>
+            <div class="container-created-container">CPU: @Html.DisplayFor(m => agent.CpuUsage)%</div>
+            <div class="container-created-container">Free Memory: @Html.DisplayFor(m => agent.AvailableMemory) MB</div>
         </div>
     }
 </div>

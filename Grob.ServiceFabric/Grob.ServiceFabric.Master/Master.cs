@@ -77,26 +77,43 @@ namespace Grob.ServiceFabric.Master
             return result;
         }
 
-        public async Task RegisterAgentAsync(GrobAgentHttpClient grobAgent)
+        public async Task RegisterAgentAsync(GrobAgent grobAgent)
         {
             await _grobAgentRepository.AddAgent(grobAgent);
         }
 
-        public async Task<List<GrobAgentHttpClient>> GetGrobAgentsAsync()
+        public async Task<List<GrobAgent>> GetGrobAgentsAsync()
         {
-            return await _grobAgentRepository.GetGrobAgentsAsync();
+            var agents = await _grobAgentRepository.GetGrobAgentsAsync();
+            
+            foreach(var agent in agents)
+            {
+                var information = agent.GetAgentInformation();
+                agent.CpuUsage = information.CpuUsage;
+                agent.AvailableMemory = information.AvailableMemory;
+            }
+
+            return agents;
         }
 
-        private async Task<GrobAgentHttpClient> GetLeastUsedAgentAsync()
+        private async Task<GrobAgent> GetLeastUsedAgentAsync()
         {
-            var allAgents = await _grobAgentRepository.GetGrobAgentsAsync();            
+            var allAgents = await _grobAgentRepository.GetGrobAgentsAsync();
+            float minUsage = 100;
+            var selectedAgent = new GrobAgent();
 
             foreach(var agent in allAgents)
             {
                 var information = agent.GetAgentInformation();
+                float.TryParse(information.CpuUsage, out float value);
+
+                if(minUsage - value > 0)
+                {
+                    selectedAgent = agent;
+                }
             }
 
-            return allAgents.FirstOrDefault();
+            return selectedAgent;
         }
 
         public async Task<List<Application>> GetApplicationsAsync()

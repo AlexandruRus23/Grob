@@ -20,9 +20,9 @@ namespace Grob.ServiceFabric.Master.AgentRepository
             _stateManager = stateManager;
         }
 
-        public async Task AddAgent(GrobAgentHttpClient grobAgent)
+        public async Task AddAgent(GrobAgent grobAgent)
         {
-            var agents = await _stateManager.GetOrAddAsync<IReliableDictionary<string, GrobAgentHttpClient>>(RepositoryConstants.AGENT_REPOSITORY);
+            var agents = await _stateManager.GetOrAddAsync<IReliableDictionary<string, GrobAgent>>(RepositoryConstants.AGENT_REPOSITORY);
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -32,10 +32,10 @@ namespace Grob.ServiceFabric.Master.AgentRepository
             }
         }
 
-        public async Task<List<GrobAgentHttpClient>> GetGrobAgentsAsync()
+        public async Task<List<GrobAgent>> GetGrobAgentsAsync()
         {
-            var agents = await _stateManager.GetOrAddAsync<IReliableDictionary<string, GrobAgentHttpClient>>(RepositoryConstants.AGENT_REPOSITORY);
-            var result = new List<GrobAgentHttpClient>();
+            var agents = await _stateManager.GetOrAddAsync<IReliableDictionary<string, GrobAgent>>(RepositoryConstants.AGENT_REPOSITORY);
+            var result = new List<GrobAgent>();
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -45,7 +45,7 @@ namespace Grob.ServiceFabric.Master.AgentRepository
                 {
                     while (await enumerator.MoveNextAsync(CancellationToken.None))
                     {
-                        KeyValuePair<string, GrobAgentHttpClient> current = enumerator.Current;
+                        KeyValuePair<string, GrobAgent> current = enumerator.Current;
                         result.Add(current.Value);
                     }
                 }

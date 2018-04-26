@@ -9,6 +9,6 @@ namespace Grob.Agent.Models
     public class AgentInformation
     {
         public string CpuUsage { get; set; }
-        public string MemoryUsage { get; set; }
+        public string AvailableMemory { get; set; }
     }
 }

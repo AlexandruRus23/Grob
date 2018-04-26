@@ -19,6 +19,8 @@
                     <div class="container-name-container">@Html.DisplayFor(m => task.CreationTime)</div>
                     <div class="container-created-container">@Html.DisplayFor(m => task.Name)</div>
                     <div class="container-created-container">@Html.DisplayFor(m => task.ApplicationName)</div>
+                    <div class="container-created-container">Last run: @Html.DisplayFor(m => task.LastRunTime)</div>
+                    <div class="container-created-container">Next run: @Html.DisplayFor(m => task.NextRunTime)</div>
                 </div>
 
                 @using (Html.BeginForm(actionName: "delete", controllerName: "task", routeValues: new { taskId = task.Id }))

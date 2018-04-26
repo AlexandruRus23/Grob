@@ -10,8 +10,6 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
     public interface IScheduleRunner
     {
         Guid Id { get; set; }
-        DateTime NextRun { get; set; }
-        DateTime LastRun { get; set; }
 
         void Start();
         void RunAsync();

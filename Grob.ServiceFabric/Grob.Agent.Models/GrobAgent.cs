@@ -12,20 +12,22 @@ using Newtonsoft.Json;
 
 namespace Grob.Agent.Models
 {
-    public class GrobAgentHttpClient : IGrobAgentService
+    public class GrobAgent : IGrobAgentService
     {        
         public string Uri { get; set; }
         public string Name { get; set; }
         public string ServiceFabricNodeName { get; set; }
+        public string CpuUsage { get; set; }
+        public string AvailableMemory { get; set; }
 
-        public GrobAgentHttpClient(string name, string uri, long instanceId, string serviceFabricNodeName)
+        public GrobAgent(string name, string uri, long instanceId, string serviceFabricNodeName)
         {
             Name = name;
             Uri = uri;
             ServiceFabricNodeName = serviceFabricNodeName;
         }
 
-        public GrobAgentHttpClient()
+        public GrobAgent()
         {
         }
 
