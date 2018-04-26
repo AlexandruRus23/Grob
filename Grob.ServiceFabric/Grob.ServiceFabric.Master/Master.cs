@@ -27,12 +27,14 @@ namespace Grob.ServiceFabric.Master
     {
         private IGrobAgentRepository _grobAgentRepository;
         private IContainerRepository _containerRepository;
+        private FabricClient _fabricClient;
 
         public Master(StatefulServiceContext context)
             : base(context)
         {        
             _containerRepository = new ServiceFabricContainerRepository(this.StateManager);
             _grobAgentRepository = new ServiceFabricAgentRepository(this.StateManager);
+            _fabricClient = new FabricClient();
         }
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
@@ -58,8 +60,8 @@ namespace Grob.ServiceFabric.Master
 
             if (container != null)
             {
-                var agents = await _grobAgentRepository.GetGrobAgentsAsync();
-                agents.FirstOrDefault()?.RunContainer(container);
+                var agents = await GetLeastUsedAgentAsync();
+                agents.RunContainer(container);
             }
         }
 
@@ -75,19 +77,25 @@ namespace Grob.ServiceFabric.Master
             return result;
         }
 
-        public async Task RegisterAgentAsync(GrobAgent grobAgent)
+        public async Task RegisterAgentAsync(GrobAgentHttpClient grobAgent)
         {
             await _grobAgentRepository.AddAgent(grobAgent);
         }
 
-        public async Task<List<GrobAgent>> GetGrobAgentsAsync()
+        public async Task<List<GrobAgentHttpClient>> GetGrobAgentsAsync()
         {
             return await _grobAgentRepository.GetGrobAgentsAsync();
         }
 
-        private async Task<GrobAgent> GetLeastUsedAgentAsync()
+        private async Task<GrobAgentHttpClient> GetLeastUsedAgentAsync()
         {
-            var allAgents = await _grobAgentRepository.GetGrobAgentsAsync();
+            var allAgents = await _grobAgentRepository.GetGrobAgentsAsync();            
+
+            foreach(var agent in allAgents)
+            {
+                var information = agent.GetAgentInformation();
+            }
+
             return allAgents.FirstOrDefault();
         }
 

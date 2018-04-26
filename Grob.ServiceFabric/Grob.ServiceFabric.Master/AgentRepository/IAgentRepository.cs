@@ -9,7 +9,7 @@ namespace Grob.ServiceFabric.Master.AgentRepository
 {
     public interface IGrobAgentRepository
     {
-        Task AddAgent(GrobAgent grobAgent);
-        Task<List<GrobAgent>> GetGrobAgentsAsync();
+        Task AddAgent(GrobAgentHttpClient grobAgent);
+        Task<List<GrobAgentHttpClient>> GetGrobAgentsAsync();
     }
 }

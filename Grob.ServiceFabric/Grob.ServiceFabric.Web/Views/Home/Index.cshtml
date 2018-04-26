@@ -1,4 +1,4 @@
-﻿
+﻿@model Grob.ServiceFabric.Web.Models.IndexViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -8,7 +8,7 @@
     <div class="containers-name-header">Agents</div>
 </div>
 <div class="containers-list">
-    @foreach (Grob.Agent.Models.GrobAgent agent in Model.GrobAgents)
+    @foreach (Grob.Agent.Models.GrobAgentHttpClient agent in Model.GrobAgents)
     {
         <hr class="container-separator">
         <div class="container-row">            

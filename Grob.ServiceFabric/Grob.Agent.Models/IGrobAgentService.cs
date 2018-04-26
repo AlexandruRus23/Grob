@@ -13,5 +13,6 @@ namespace Grob.Agent.Models
         List<Application> GetApplications();
         void CreateContainers(GrobTask grobTask);
         void DeleteContainers(GrobTask grobTask);
+        AgentInformation GetAgentInformation();
     }
 }

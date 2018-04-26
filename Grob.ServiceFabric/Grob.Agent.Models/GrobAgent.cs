@@ -12,18 +12,20 @@ using Newtonsoft.Json;
 
 namespace Grob.Agent.Models
 {
-    public class GrobAgent : IGrobAgentService
+    public class GrobAgentHttpClient : IGrobAgentService
     {        
         public string Uri { get; set; }
         public string Name { get; set; }
+        public string ServiceFabricNodeName { get; set; }
 
-        public GrobAgent(string name, string uri, long instanceId)
+        public GrobAgentHttpClient(string name, string uri, long instanceId, string serviceFabricNodeName)
         {
             Name = name;
             Uri = uri;
+            ServiceFabricNodeName = serviceFabricNodeName;
         }
 
-        public GrobAgent()
+        public GrobAgentHttpClient()
         {
         }
 
@@ -75,6 +77,14 @@ namespace Grob.Agent.Models
                 Content = new StringContent(JsonConvert.SerializeObject(grobTask), Encoding.UTF8, "application/json")
             };
             var result = client.SendAsync(request).Result;
+        }
+
+        public AgentInformation GetAgentInformation()
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, Uri.ToString() + "information");
+            var result = client.SendAsync(request).Result;
+            return JsonConvert.DeserializeObject<AgentInformation>(result.Content.ReadAsStringAsync().Result);
         }
     }
 }

@@ -14,8 +14,8 @@ namespace Grob.Master.Models
     {
         Task RunTask(GrobTask task);
         Task<List<Container>> GetContainersAsync();
-        Task<List<GrobAgent>> GetGrobAgentsAsync();
-        Task RegisterAgentAsync(GrobAgent grobAgent);
+        Task<List<GrobAgentHttpClient>> GetGrobAgentsAsync();
+        Task RegisterAgentAsync(GrobAgentHttpClient grobAgent);
         Task<List<Application>> GetApplicationsAsync();
         Task CreateContainerForTaskAsync(GrobTask grobTask);
         Task DeleteContainerForTaskAsync(GrobTask grobTask);

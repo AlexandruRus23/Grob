@@ -66,7 +66,7 @@ namespace Grob.ServiceFabric.Agent
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            var grobAgent = new GrobAgent(Environment.MachineName, communicationListener.GrobAgentAddress, Context.InstanceId);
+            var grobAgent = new GrobAgentHttpClient(Environment.MachineName, communicationListener.GrobAgentAddress, Context.InstanceId, Context.NodeContext.NodeName);
             await _grobMasterService.RegisterAgentAsync(grobAgent);
         }
 
