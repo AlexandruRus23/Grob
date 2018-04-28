@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Grob.Entities.Grob;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +12,12 @@ namespace Grob.ServiceFabric.Web.Models.Applications
     {
         public string Name { get; set; }
         public IFormFile Archive { get; set; }
+        public ApplicationTypeEnum ApplicationType { get; set; }
+        public List<SelectListItem> ApplicationTypes { get; set; }       
+
+        public NewApplicationViewModel()
+        {
+            ApplicationTypes = new List<SelectListItem>();
+        }
     }
 }

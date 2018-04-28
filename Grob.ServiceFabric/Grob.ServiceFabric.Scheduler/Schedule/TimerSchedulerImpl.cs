@@ -11,56 +11,39 @@ using System.Threading.Tasks;
 
 namespace Grob.ServiceFabric.Scheduler.Schedule
 {
-    public class TimerSchedulerImpl : IScheduleRunner
+    public class TimerSchedulerImpl : BaseScheduleRunner
     {
-        public Guid Id { get; set; }
-
-        private bool _isRunning; 
-
-        private GrobTask _grobTask;
-        private IGrobMasterService _grobMasterService;        
-
-        public TimerSchedulerImpl(GrobTask grobTask, IGrobMasterService grobMasterService)
+        public TimerSchedulerImpl(GrobTask grobTask, IGrobMasterService grobMasterService) : base(grobTask, grobMasterService)
         {
-            _grobTask = grobTask;
-            _grobMasterService = grobMasterService;
-            _isRunning = true;            
-            Id = grobTask.Id;
-
-            var thread = new Thread(Start);
-            thread.Start();
+            RunnerThread = new Thread(Start);
+            RunnerThread.Start();
         }
 
-        public void Start()
+        public override void Start()
         {
-            while (_isRunning)
+            while (true)
             {
-                var schedule = CrontabSchedule.Parse(_grobTask.ScheduleInfo);
+                var schedule = CrontabSchedule.Parse(GrobTask.ScheduleInfo);
                 var nextRun = schedule.GetNextOccurrence(DateTime.Now);
-                _grobTask.NextRunTime = nextRun.ToString();
+                GrobTask.NextRunTime = nextRun.ToString();
 
                 var sleepTime = nextRun.Subtract(DateTime.Now);
                 Thread.Sleep(sleepTime);
-
-                if (!_isRunning)
-                {
-                    break;
-                }
-
                 Thread thread = new Thread(RunAsync);
                 thread.Start();      
             }
         }
 
-        public void RunAsync()
+        public override void RunAsync()
         {
-            _grobTask.LastRunTime = DateTime.Now.ToString();
-            _grobMasterService.RunTask(_grobTask);
+            GrobTask.LastRunTime = DateTime.Now.ToString();
+            GrobMasterService.RunTask(GrobTask);
         }
 
-        public void Stop()
+        public override void Stop()
         {
-            _isRunning = false;
+            GrobMasterService.StopTask(GrobTask);
+            RunnerThread?.Abort();
         }
     }
 }

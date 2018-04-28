@@ -51,5 +51,10 @@ namespace Grob.Docker
         {
             return;
         }
+
+        public Task StopContainerAsync(Container containerName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -40,5 +40,11 @@
         {
             await _dockerManager.StartContainerAsync(container);
         }
+
+        [Route("containers/stop"), HttpPost]
+        public async void StopContainer([FromBody] Container container)
+        {
+            await _dockerManager.StopContainerAsync(container);
+        }
     }
 }

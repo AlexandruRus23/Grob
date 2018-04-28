@@ -28,6 +28,9 @@
             <div>
                 @Html.DropDownListFor(m => m.ScheduleType, Model.ScheduleTypes, "Select schedule type", null)
             </div>
+            <div>
+                @Html.DropDownListFor(m => m.ContainerType, Model.ContainerTypes, "Select container type", null)
+            </div>
             <div class="form-group">
                 <label asp-for="ScheduleInfo" class="control-label"></label>
                 <input asp-for="ScheduleInfo" class="form-control" />

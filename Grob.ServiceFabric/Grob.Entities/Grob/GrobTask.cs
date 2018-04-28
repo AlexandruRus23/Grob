@@ -21,12 +21,15 @@ namespace Grob.Entities.Grob
         public DateTime CreationTime { get; set; }
         public string LastRunTime { get; set; }        
         public string NextRunTime { get; set; }
+        public ContainerTypeEnum ContainerType { get; set; }
+        public GrobTaskStatusEnum Status { get; set; }
+        public Uri Url { get; set; }
 
         public GrobTask()
         {
         }
 
-        public GrobTask(string name, string applicationName, ScheduleTypesEnum scheduleType, string scheduleInfo) : this()
+        public GrobTask(string name, string applicationName, ScheduleTypesEnum scheduleType, string scheduleInfo, ContainerTypeEnum containerType) : this()
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -36,6 +39,7 @@ namespace Grob.Entities.Grob
             CreationTime = DateTime.Now;
             LastRunTime = "-1";
             NextRunTime = "-1";
+            ContainerType = containerType;
         }
     }
 }

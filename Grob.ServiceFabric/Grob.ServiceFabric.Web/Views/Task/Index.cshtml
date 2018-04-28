@@ -16,11 +16,20 @@
             {
                 <hr class="container-separator">
                 <div class="container-row">
-                    <div class="container-name-container">@Html.DisplayFor(m => task.CreationTime)</div>
-                    <div class="container-created-container">@Html.DisplayFor(m => task.Name)</div>
-                    <div class="container-created-container">@Html.DisplayFor(m => task.ApplicationName)</div>
-                    <div class="container-created-container">Last run: @Html.DisplayFor(m => task.LastRunTime)</div>
-                    <div class="container-created-container">Next run: @Html.DisplayFor(m => task.NextRunTime)</div>
+                    <div class="container-name-container">Created at: @Html.DisplayFor(m => task.CreationTime)</div>
+                    <div class="container-created-container">Name: @Html.DisplayFor(m => task.Name)</div>
+                    <div class="container-created-container">Application: @Html.DisplayFor(m => task.ApplicationName)</div>
+                    @if (task.ContainerType == Grob.Entities.Grob.ContainerTypeEnum.Executable)
+                    {
+                        <div class="container-created-container">Last run: @Html.DisplayFor(m => task.LastRunTime)</div>
+                        <div class="container-created-container">Next run: @Html.DisplayFor(m => task.NextRunTime)</div>
+                    }
+                    else
+                    {
+                        <div class="container-created-container">Status: @Html.DisplayFor(m => task.Status)</div>
+                        <div class="container-created-container">Url: <a href="@task.Url">@task.Url</a></div>
+                    }
+
                 </div>
 
                 @using (Html.BeginForm(actionName: "delete", controllerName: "task", routeValues: new { taskId = task.Id }))

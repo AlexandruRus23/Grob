@@ -17,6 +17,9 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            <div>
+                @Html.DropDownListFor(m => m.ApplicationType, Model.ApplicationTypes, "Select application type", null)
+            </div>
             <div class="form-group">
                 <label asp-for="Archive" class="control-label"></label>
                 <input asp-for="Archive" class="btn" type="file" value="" />

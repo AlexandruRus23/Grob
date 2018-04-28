@@ -8,9 +8,9 @@ namespace Grob.ServiceFabric.Scheduler.RunnerRepository
 {
     interface IRunnerRepository
     {
-        Task AddRunnerAsync(IScheduleRunner runner);
-        Task<List<IScheduleRunner>> GetRunners();
+        Task AddRunnerAsync(BaseScheduleRunner runner);
+        Task<List<BaseScheduleRunner>> GetRunners();
         Task StopRunner(Guid runnerId);
-        Task<IScheduleRunner> GetRunner(Guid grobTask);
+        Task<BaseScheduleRunner> GetRunner(Guid grobTask);
     }
 }

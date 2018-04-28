@@ -11,6 +11,7 @@ namespace Grob.Docker
         Task<List<Container>> ListContainers();
         Task<List<Application>> ListImagesAsync();
         Task StartContainerAsync(Container containerName);
+        Task StopContainerAsync(Container containerName);
         Task CreateImageAsync(string workingDirectory, string name);
         Task CreateImageAsync(Stream contents, string dockerFilePath, string name);
         Task CreateContainerAsync(GrobTask grobTask);

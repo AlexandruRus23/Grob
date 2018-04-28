@@ -56,6 +56,13 @@ namespace Grob.ServiceFabric.Web.Controllers
                 Value = s.ToString()
             }));
 
+            var containerTypes = Enum.GetValues(typeof(ContainerTypeEnum)).Cast<ContainerTypeEnum>().ToList();
+            containerTypes.ForEach(c => model.ContainerTypes.Add(new SelectListItem()
+            {
+                Text = c.ToString(),
+                Value = c.ToString()
+            }));
+
             return View(model);
         }
 
@@ -66,8 +73,8 @@ namespace Grob.ServiceFabric.Web.Controllers
         {
             try
             {                
-                var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName, newTaskModel.ScheduleType, newTaskModel.ScheduleInfo);
-                _grobMasterService.CreateContainerForTaskAsync(task);
+                var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName, newTaskModel.ScheduleType, newTaskModel.ScheduleInfo, newTaskModel.ContainerType);
+                task = await _grobMasterService.CreateContainerForTaskAsync(task);
                 await _grobSchedulerService.AddTaskAsync(task);
                 return RedirectToAction(nameof(Index));
             }

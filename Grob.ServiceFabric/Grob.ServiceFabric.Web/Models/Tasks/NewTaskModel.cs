@@ -13,13 +13,17 @@ namespace Grob.ServiceFabric.Web.Models.Tasks
         public string ApplicationName { get; set; }
         public ScheduleTypesEnum ScheduleType { get; set; }
         public string ScheduleInfo { get; set; }
-        public List<SelectListItem> RegisteredApplications { get; set; }
         public List<SelectListItem> ScheduleTypes { get; set; }
+        public ContainerTypeEnum ContainerType { get; set; }
+        public List<SelectListItem> ContainerTypes { get; set; } 
+        public List<SelectListItem> RegisteredApplications { get; set; }
+        
 
         public NewTaskModel()
         {
             RegisteredApplications = new List<SelectListItem>();
             ScheduleTypes = new List<SelectListItem>();
+            ContainerTypes = new List<SelectListItem>();
         }
     }
 }

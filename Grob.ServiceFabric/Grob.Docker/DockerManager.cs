@@ -25,13 +25,48 @@ namespace Grob.Docker
 
         public async Task CreateContainerAsync(GrobTask grobTask)
         {
+            var parameters = GetCreateParameters(grobTask);
+            await _dockerClient.Containers.CreateContainerAsync(parameters);
+        }
+
+        private CreateContainerParameters GetCreateParameters(GrobTask grobTask)
+        {
             var parameters = new CreateContainerParameters()
             {
                 Image = grobTask.ApplicationName,
-                Name = GetContainerName(grobTask)
+                Name = GetContainerName(grobTask),
             };
 
-            await _dockerClient.Containers.CreateContainerAsync(parameters);
+            switch (grobTask.ContainerType)
+            {
+                case ContainerTypeEnum.Executable:
+                    return parameters;
+                case ContainerTypeEnum.WebApplication:
+                    string containerPort = "80";
+                    string hostPort = grobTask.Url.Port.ToString();
+
+                    parameters.ExposedPorts = new Dictionary<string, EmptyStruct>()
+                    {
+                        { containerPort, new EmptyStruct() }
+                    };
+                    parameters.HostConfig = new HostConfig()
+                    {
+                        PortBindings = new Dictionary<string, IList<PortBinding>>()
+                        {
+                            {
+                                containerPort,
+                                new List<PortBinding>()
+                                {
+                                    new PortBinding() { HostPort = hostPort }
+                                }
+                            }
+                        }
+                    };
+                    
+                    break;
+            }
+
+            return parameters;
         }
 
         public async Task CreateImageAsync(string workingDirectory, string name)
@@ -137,6 +172,11 @@ namespace Grob.Docker
         private string GetContainerName(GrobTask grobTask)
         {
             return grobTask.Name.ToLower().Replace(" ", string.Empty);
+        }
+
+        public async Task StopContainerAsync(Container container)
+        {
+            await _dockerClient.Containers.StopContainerAsync(container.Id, new ContainerStopParameters());
         }
     }
 }

@@ -20,9 +20,9 @@ namespace Grob.ServiceFabric.Scheduler.RunnerRepository
             _stateManager = stateManager;
         }
 
-        public async Task AddRunnerAsync(IScheduleRunner runner)
+        public async Task AddRunnerAsync(BaseScheduleRunner runner)
         {
-            var runners = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, IScheduleRunner>>(RepositoryConstants.RUNNERS_REPOSITORY);
+            var runners = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, BaseScheduleRunner>>(RepositoryConstants.RUNNERS_REPOSITORY);
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -34,7 +34,7 @@ namespace Grob.ServiceFabric.Scheduler.RunnerRepository
 
         public async Task StopRunner(Guid runnerId)
         {
-            var runners = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, IScheduleRunner>>(RepositoryConstants.RUNNERS_REPOSITORY);
+            var runners = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, BaseScheduleRunner>>(RepositoryConstants.RUNNERS_REPOSITORY);
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -51,10 +51,10 @@ namespace Grob.ServiceFabric.Scheduler.RunnerRepository
             }
         }
 
-        public async Task<List<IScheduleRunner>> GetRunners()
+        public async Task<List<BaseScheduleRunner>> GetRunners()
         {
-            var runners = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, IScheduleRunner>>(RepositoryConstants.RUNNERS_REPOSITORY);
-            var result = new List<IScheduleRunner>();
+            var runners = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, BaseScheduleRunner>>(RepositoryConstants.RUNNERS_REPOSITORY);
+            var result = new List<BaseScheduleRunner>();
 
             using (var tx = _stateManager.CreateTransaction())
             {
@@ -64,7 +64,7 @@ namespace Grob.ServiceFabric.Scheduler.RunnerRepository
                 {
                     while (await enumerator.MoveNextAsync(CancellationToken.None))
                     {
-                        KeyValuePair<Guid, IScheduleRunner> current = enumerator.Current;
+                        KeyValuePair<Guid, BaseScheduleRunner> current = enumerator.Current;
                         result.Add(current.Value);
                     }
                 }
@@ -73,7 +73,7 @@ namespace Grob.ServiceFabric.Scheduler.RunnerRepository
             return result;
         }
 
-        public Task<IScheduleRunner> GetRunner(Guid grobTask)
+        public Task<BaseScheduleRunner> GetRunner(Guid grobTask)
         {
             throw new NotImplementedException();
         }

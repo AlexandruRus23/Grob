@@ -8,12 +8,14 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
 {
     public static class SchedulerFactory
     {
-        public static IScheduleRunner GetRunner(GrobTask grobTask, IGrobMasterService grobMasterService)
+        public static BaseScheduleRunner GetRunner(GrobTask grobTask, IGrobMasterService grobMasterService)
         {
             switch (grobTask.ScheduleType)
             {
                 case ScheduleTypesEnum.Timer:
                     return new TimerSchedulerImpl(grobTask, grobMasterService);
+                case ScheduleTypesEnum.WebHost:
+                    return new WebHostScheduler(grobTask, grobMasterService);
             }
 
             return null;

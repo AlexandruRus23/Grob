@@ -10,24 +10,24 @@ namespace Grob.ServiceFabric.Scheduler.RunnerRepository
 {
     public class SimpleRunnerRepository : IRunnerRepository
     {
-        private List<IScheduleRunner> scheduleRunners;
+        private List<BaseScheduleRunner> scheduleRunners;
 
         public SimpleRunnerRepository()
         {
-            scheduleRunners = new List<IScheduleRunner>();
+            scheduleRunners = new List<BaseScheduleRunner>();
         }
 
-        public async Task AddRunnerAsync(IScheduleRunner runner)
+        public async Task AddRunnerAsync(BaseScheduleRunner runner)
         {
             scheduleRunners.Add(runner);
         }
 
-        public async Task<IScheduleRunner> GetRunner(Guid runnerId)
+        public async Task<BaseScheduleRunner> GetRunner(Guid runnerId)
         {
             return scheduleRunners.Where(r => r.Id == runnerId).FirstOrDefault();
         }
 
-        public async Task<List<IScheduleRunner>> GetRunners()
+        public async Task<List<BaseScheduleRunner>> GetRunners()
         {
             return scheduleRunners;
         }

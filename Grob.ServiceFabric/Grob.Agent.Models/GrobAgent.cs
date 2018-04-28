@@ -51,6 +51,16 @@ namespace Grob.Agent.Models
             var result = client.SendAsync(request).Result;
         }
 
+        public void StopContainer(Container container)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + $"containers/stop")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(container), Encoding.UTF8, "application/json")
+            };
+            var result = client.SendAsync(request).Result;
+        }
+
         public List<Application> GetApplications()
         {
             var client = new HttpClient();
@@ -87,6 +97,6 @@ namespace Grob.Agent.Models
             var request = new HttpRequestMessage(HttpMethod.Get, Uri.ToString() + "information");
             var result = client.SendAsync(request).Result;
             return JsonConvert.DeserializeObject<AgentInformation>(result.Content.ReadAsStringAsync().Result);
-        }
+        }        
     }
 }

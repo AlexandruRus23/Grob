@@ -48,15 +48,20 @@ namespace Grob.ServiceFabric.Agent
 
         private static string GetAverageAvailableMemory(Queue<string> availableMemory)
         {
-            int sum = 0;
-
-            foreach (var entry in availableMemory)
+            if(availableMemory.Count > 0)
             {
-                Int32.TryParse(entry, out int value);
-                sum += value;
+                int sum = 0;
+
+                foreach (var entry in availableMemory)
+                {
+                    Int32.TryParse(entry, out int value);
+                    sum += value;
+                }
+
+                return (sum / availableMemory.Count).ToString();
             }
 
-            return (sum / availableMemory.Count).ToString();
+            return "N/A";            
         }
     }
 }

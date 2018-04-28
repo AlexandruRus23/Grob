@@ -88,10 +88,8 @@ namespace Grob.ServiceFabric.Scheduler
         {
             var task = GetTasksAsync().Result.Where(t => t.Id == taskId).FirstOrDefault();
             await _taskRepository.DeleteTaskAsync(taskId);
-            await _grobMaster.DeleteContainerForTaskAsync(task);
             await _runnerRepository.StopRunner(task.Id);
-        }
-
-        // SCOATE SCHEDULE TYPES INTR-UN PROIECT CA SA POTI SA REFERENTIEZI DIN GROBTASK CA DUPA SA AI ACCES LA NEXT SI LAST RUN
+            await _grobMaster.DeleteContainerForTaskAsync(task);
+        }        
     }
 }
