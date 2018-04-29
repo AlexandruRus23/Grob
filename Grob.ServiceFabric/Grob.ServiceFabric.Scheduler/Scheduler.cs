@@ -80,8 +80,11 @@ namespace Grob.ServiceFabric.Scheduler
         public async Task AddTaskAsync(GrobTask task)
         {            
             await _taskRepository.AddTask(task);
-            var runner = SchedulerFactory.GetRunner(task, _grobMaster);
-            await _runnerRepository.AddRunnerAsync(runner);
+
+            if(task.ScheduleType != ScheduleTypesEnum.WebTrigger)
+            {
+                await StartTaskAsync(task);
+            }            
         }
 
         public async Task DeleteTaskAsync(Guid taskId)
@@ -90,6 +93,30 @@ namespace Grob.ServiceFabric.Scheduler
             await _taskRepository.DeleteTaskAsync(taskId);
             await _runnerRepository.StopRunner(task.Id);
             await _grobMaster.DeleteContainerForTaskAsync(task);
-        }        
+        }
+
+        public async Task StartTaskAsync(GrobTask grobTaskToRun)
+        {
+            var registeredTask = await _taskRepository.GetRegisteredTask(grobTaskToRun.Name);
+            registeredTask.LastRunTime = DateTime.Now.ToString();
+
+            if(registeredTask.Status == GrobTaskStatusEnum.Stopped)
+            {
+                registeredTask.Status = GrobTaskStatusEnum.Running;
+                var runner = SchedulerFactory.GetRunner(registeredTask, _grobMaster);
+
+                // if task is webtrigger, then wait for the task to run
+                if (registeredTask.ScheduleType == ScheduleTypesEnum.WebTrigger)
+                {
+                    await runner.RunAsync();
+                    //Thread.Sleep(500);
+                }
+
+                runner.RunnerThread = new Thread(runner.Start);
+                runner.RunnerThread.Start();
+
+                await _runnerRepository.AddRunnerAsync(runner);
+            }            
+        }
     }
 }

@@ -117,12 +117,9 @@ namespace Grob.Docker
             var containerToDelete = containers.Where(c => c.Name == GetContainerName(grobTask)).FirstOrDefault();
             if (containerToDelete != null)
             {
-                await _dockerClient.Containers.RemoveContainerAsync(containerToDelete.Id, new ContainerRemoveParameters()
-                {
-                    //RemoveVolumes = true,
-                    //Force = true,
-                    //RemoveLinks = true
-                });
+                await _dockerClient.Containers.StopContainerAsync(containerToDelete.Id, new ContainerStopParameters());
+
+                await _dockerClient.Containers.RemoveContainerAsync(containerToDelete.Id, new ContainerRemoveParameters());
             }
         }
 
@@ -167,6 +164,12 @@ namespace Grob.Docker
         public async Task StartContainerAsync(Container container)
         {
             await _dockerClient.Containers.StartContainerAsync(container.Id, new ContainerStartParameters());
+
+            var startedContainer = ListContainers().Result.Where(c => c.Id == container.Id).FirstOrDefault();
+            while (!startedContainer.Status.Contains("Up"))
+            {
+
+            }
         }
 
         private string GetContainerName(GrobTask grobTask)

@@ -15,8 +15,6 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
     {
         public TimerSchedulerImpl(GrobTask grobTask, IGrobMasterService grobMasterService) : base(grobTask, grobMasterService)
         {
-            RunnerThread = new Thread(Start);
-            RunnerThread.Start();
         }
 
         public override void Start()
@@ -29,21 +27,27 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
 
                 var sleepTime = nextRun.Subtract(DateTime.Now);
                 Thread.Sleep(sleepTime);
-                Thread thread = new Thread(RunAsync);
+                Thread thread = new Thread(Run);
                 thread.Start();      
             }
         }
 
-        public override void RunAsync()
+        public override void Run()
         {
             GrobTask.LastRunTime = DateTime.Now.ToString();
-            GrobMasterService.RunTask(GrobTask);
+            GrobMasterService.RunTaskAsync(GrobTask);
         }
 
         public override void Stop()
         {
             GrobMasterService.StopTask(GrobTask);
             RunnerThread?.Abort();
+        }
+
+        public override async Task RunAsync()
+        {
+            GrobTask.LastRunTime = DateTime.Now.ToString();
+            await GrobMasterService.RunTaskAsync(GrobTask);
         }
     }
 }

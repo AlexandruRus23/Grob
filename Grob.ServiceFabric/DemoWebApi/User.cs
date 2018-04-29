@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Grob.Entities.Grob
+namespace DemoWebApplication
 {
-    public enum GrobTaskStatusEnum
+    public class User
     {
-        Stopped,
-        Running
+        public string Username { get; set; }
     }
 }

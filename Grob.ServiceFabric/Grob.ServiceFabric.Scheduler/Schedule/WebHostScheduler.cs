@@ -13,20 +13,18 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
     {
         public WebHostScheduler(GrobTask grobTask, IGrobMasterService grobMasterService) : base(grobTask, grobMasterService)
         {
-            RunnerThread = new Thread(Start);
-            RunnerThread.Start();
-        }
-
-        public override void RunAsync()
-        {
-            RunnerThread = new Thread(Start);
-            RunnerThread.Start();
-        }
+        }        
 
         public override void Start()
         {
+            var thread = new Thread(Run);
+            thread.Start();
+        }
+
+        public override void Run()
+        {
             GrobTask.Status = GrobTaskStatusEnum.Running;
-            GrobMasterService.RunTask(GrobTask);
+            GrobMasterService.RunTaskAsync(GrobTask);            
         }
 
         public override void Stop()
@@ -34,6 +32,12 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
             GrobTask.Status = GrobTaskStatusEnum.Stopped;
             GrobMasterService.StopTask(GrobTask);
             RunnerThread?.Abort();
+        }
+
+        public override async Task RunAsync()
+        {
+            GrobTask.Status = GrobTaskStatusEnum.Running;
+            await GrobMasterService.RunTaskAsync(GrobTask);
         }
     }
 }

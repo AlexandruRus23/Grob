@@ -52,7 +52,7 @@ namespace Grob.ServiceFabric.Master
             //}           
         }
 
-        public async Task RunTask(GrobTask task)
+        public async Task RunTaskAsync(GrobTask task)
         {
             var containers = await GetContainersAsync();
 
@@ -61,7 +61,7 @@ namespace Grob.ServiceFabric.Master
             if (container != null)
             {
                 var agents = await GetLeastUsedAgentAsync();
-                agents.RunContainer(container);
+                await agents.RunContainerAsync(container);
             }
         }
 

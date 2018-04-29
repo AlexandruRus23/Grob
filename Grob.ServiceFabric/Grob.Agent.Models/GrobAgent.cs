@@ -41,14 +41,15 @@ namespace Grob.Agent.Models
             return containers;
         }
 
-        public void RunContainer(Container container)
+        public async Task<Container> RunContainerAsync(Container container)
         {
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + $"containers/start")
             {
                 Content = new StringContent(JsonConvert.SerializeObject(container), Encoding.UTF8, "application/json")
             };
-            var result = client.SendAsync(request).Result;
+            var result = await client.SendAsync(request);
+            return container;
         }
 
         public void StopContainer(Container container)

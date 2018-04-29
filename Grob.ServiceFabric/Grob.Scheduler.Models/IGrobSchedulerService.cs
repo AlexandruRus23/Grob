@@ -13,5 +13,6 @@ namespace Grob.Scheduler.Models
         Task AddTaskAsync(GrobTask task);
         Task<List<GrobTask>> GetTasksAsync();
         Task DeleteTaskAsync(Guid taskId);
+        Task StartTaskAsync(GrobTask grobTaskToRun);
     }
 }

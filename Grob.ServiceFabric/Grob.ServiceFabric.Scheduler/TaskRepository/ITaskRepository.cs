@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Grob.ServiceFabric.Scheduler.TaskRepository
 {
-    interface ITaskRepository
+    public interface ITaskRepository
     {
         Task AddTask(GrobTask job);
         Task<List<GrobTask>> GetTasks();
         Task DeleteTaskAsync(Guid taskId);
+        Task<GrobTask> GetRegisteredTask(string grobTaskName);
     }
 }

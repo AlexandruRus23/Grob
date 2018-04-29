@@ -1,5 +1,6 @@
 ﻿using Grob.Entities.Grob;
 using Grob.Master.Models;
+using Grob.ServiceFabric.Scheduler.TaskRepository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +17,8 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
                     return new TimerSchedulerImpl(grobTask, grobMasterService);
                 case ScheduleTypesEnum.WebHost:
                     return new WebHostScheduler(grobTask, grobMasterService);
+                case ScheduleTypesEnum.WebTrigger:
+                    return new WebTriggerScheduler(grobTask, grobMasterService);
             }
 
             return null;

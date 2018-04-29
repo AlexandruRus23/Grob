@@ -13,7 +13,7 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
     {
         public Guid Id { get; set; }
 
-        protected Thread RunnerThread { get; set; }
+        public Thread RunnerThread { get; set; }
         protected GrobTask GrobTask { get; set; }
         protected IGrobMasterService GrobMasterService { get; set; }
 
@@ -25,7 +25,8 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
         }
 
         public abstract void Start();
-        public abstract void RunAsync();
+        public abstract void Run();
+        public abstract Task RunAsync();
         public abstract void Stop();
     }
 }

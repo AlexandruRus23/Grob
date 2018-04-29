@@ -26,6 +26,10 @@
                     }
                     else
                     {
+                        if (task.ScheduleType == Grob.Entities.Grob.ScheduleTypesEnum.WebTrigger)
+                        {
+                            <div class="container-created-container">Status: @Html.DisplayFor(m => task.LastRunTime)</div>
+                        }
                         <div class="container-created-container">Status: @Html.DisplayFor(m => task.Status)</div>
                         <div class="container-created-container">Url: <a href="@task.Url">@task.Url</a></div>
                     }

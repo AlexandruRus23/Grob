@@ -8,6 +8,7 @@ using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Grob.Constants;
+using System.Linq;
 
 namespace Grob.ServiceFabric.Scheduler.TaskRepository
 {
@@ -64,6 +65,12 @@ namespace Grob.ServiceFabric.Scheduler.TaskRepository
             }
 
             return result;
+        }
+
+        public async Task<GrobTask> GetRegisteredTask(string grobTaskName)
+        {
+            var tasks = await GetTasks();
+            return tasks.Where(t => t.Name == grobTaskName).FirstOrDefault();
         }
     }
 }
