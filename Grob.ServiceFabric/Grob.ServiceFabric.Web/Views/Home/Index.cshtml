@@ -4,18 +4,45 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="containers-container">
-    <div class="containers-name-header">Agents</div>
-</div>
-<div class="containers-list">
-    @foreach (Grob.Agent.Models.GrobAgent agent in Model.GrobAgents)
-    {
-        <hr class="container-separator">
-        <div class="container-row">
-            <div class="container-name-container">Name: @Html.DisplayFor(m => agent.Name)</div>
-            <div class="container-created-container">Uri: @Html.DisplayFor(m => agent.Uri)</div>
-            <div class="container-created-container">CPU: @Html.DisplayFor(m => agent.CpuUsage)%</div>
-            <div class="container-created-container">Free Memory: @Html.DisplayFor(m => agent.AvailableMemory) MB</div>
-        </div>
-    }
+<h2>Agents</h2>
+<div>
+    <table class="striped centered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Uri</th>
+                <th>CPU</th>
+                <th>Available Memory</th>
+                <th>Docker Engine</th>
+                <th>Docker for Windows</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Grob.Agent.Models.GrobAgent agent in Model.GrobAgents)
+            {
+                <tr>
+                    <th>@Html.DisplayFor(m => agent.Name)</th>
+                    <th>@Html.DisplayFor(m => agent.Uri)</th>
+                    <th>@Html.DisplayFor(m => agent.Information.CpuUsage)%</th>
+                    <th>@Html.DisplayFor(m => agent.Information.AvailableMemory) MB</th>
+                    @if (agent.Information.IsDockerEngineRunning)
+                    {
+                        <th><i class="small material-icons">check</i></th>
+                    }
+                    else
+                    {
+                        <th><i class="small material-icons">close</i></th>
+                    }
+                    @if (agent.Information.IsDockerForWindowsServiceRunning)
+                    {
+                        <th><i class="small material-icons">check</i></th>
+                    }
+                    else
+                    {
+                        <th><i class="small material-icons">close</i></th>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

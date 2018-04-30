@@ -20,6 +20,7 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
 
         public override void Start()
         {
+            GrobTask.LastRunTime = DateTime.Now.ToString();
             var lastRunTime = DateTime.Parse(GrobTask.LastRunTime);
 
             while (DateTime.Now.Subtract(lastRunTime).Minutes < 2)
@@ -38,7 +39,8 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
 
         public override async Task RunAsync()
         {
-            await GrobMasterService.RunTaskAsync(GrobTask);
+            var uri = await GrobMasterService.RunTaskAsync(GrobTask);
+            GrobTask.PrivateUrl = uri;
         }
 
         public override void Stop()

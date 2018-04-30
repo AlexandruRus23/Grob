@@ -10,5 +10,7 @@ namespace Grob.Agent.Models
     {
         public string CpuUsage { get; set; }
         public string AvailableMemory { get; set; }
+        public bool IsDockerEngineRunning { get; set; }
+        public bool IsDockerForWindowsServiceRunning { get; set; }
     }
 }

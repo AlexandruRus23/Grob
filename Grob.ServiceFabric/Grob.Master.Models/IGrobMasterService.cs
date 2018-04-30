@@ -13,7 +13,7 @@ namespace Grob.Master.Models
 {
     public interface IGrobMasterService : IService
     {
-        Task RunTaskAsync(GrobTask task);
+        Task<Uri> RunTaskAsync(GrobTask task);
         Task StopTask(GrobTask task);
         Task<List<Container>> GetContainersAsync();
         Task<List<GrobAgent>> GetGrobAgentsAsync();

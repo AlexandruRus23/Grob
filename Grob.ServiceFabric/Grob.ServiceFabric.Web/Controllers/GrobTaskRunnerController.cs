@@ -39,14 +39,15 @@ namespace Grob.ServiceFabric.Web.Controllers
 
             if (grobTaskToRun != null)
             {
-                await grobSchedulerService.StartTaskAsync(grobTaskToRun);
+                var privateUri = await grobSchedulerService.StartTaskAsync(grobTaskToRun);
 
                 using (var client = new HttpClient())
                 {
-                    using (var request = new HttpRequestMessage(HttpMethod.Post, grobTaskToRun.Url))
+                    using (var request = new HttpRequestMessage(HttpMethod.Post, privateUri))
                     {
                         using (StreamReader streamReader = new StreamReader(Request.Body, Encoding.UTF8))
                         {
+                            Thread.Sleep(2000);
                             var requestContent = streamReader.ReadToEnd();
                             request.Content = new StringContent(requestContent, Encoding.UTF8, "application/json");                            
 

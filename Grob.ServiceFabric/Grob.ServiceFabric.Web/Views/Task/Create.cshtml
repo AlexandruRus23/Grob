@@ -18,26 +18,29 @@
                 <span asp-validation-for="TaskName" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-            <label asp-for="ApplicationName" class="control-label"></label>
-            <input asp-for="ApplicationName" class="form-control" />
-            <span asp-validation-for="ApplicationName" class="text-danger"></span>
-        </div>*@
-            <div>
-                @Html.DropDownListFor(m => m.ApplicationName, Model.RegisteredApplications, "Select application", null)
+                    <label asp-for="ApplicationName" class="control-label"></label>
+                    <input asp-for="ApplicationName" class="form-control" />
+                    <span asp-validation-for="ApplicationName" class="text-danger"></span>
+                </div>*@
+            <div input-field col s12>
+                <label>Application</label>
+                @Html.DropDownListFor(m => m.ApplicationName, Model.RegisteredApplications)
             </div>
             <div>
-                @Html.DropDownListFor(m => m.ScheduleType, Model.ScheduleTypes, "Select schedule type", null)
+                <label>Schedule</label>
+                @Html.DropDownListFor(m => m.ScheduleType, Model.ScheduleTypes)
             </div>
             <div>
-                @Html.DropDownListFor(m => m.ContainerType, Model.ContainerTypes, "Select container type", null)
+                <label>Container type</label>
+                @Html.DropDownListFor(m => m.ContainerType, Model.ContainerTypes)
             </div>
             <div class="form-group">
                 <label asp-for="ScheduleInfo" class="control-label"></label>
-                <input asp-for="ScheduleInfo" class="form-control" />
+                <input asp-for="ScheduleInfo" class="form-control" value="0/3 * * * *"/>
                 <span asp-validation-for="ScheduleInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn green" />
             </div>
         </form>
     </div>
@@ -49,4 +52,10 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
+    </script>
 }

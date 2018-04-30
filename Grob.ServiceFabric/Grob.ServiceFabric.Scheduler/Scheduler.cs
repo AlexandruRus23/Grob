@@ -77,8 +77,10 @@ namespace Grob.ServiceFabric.Scheduler
             return await _taskRepository.GetTasks();
         }
 
-        public async Task AddTaskAsync(GrobTask task)
-        {            
+        public async Task CreateTaskAsync(GrobTask task)
+        {
+            // CHANGE THIS TO PUBLIC IP OF CLUSTER
+            task.PublicUrl = new Uri($"http://localhost:8080/api/GrobTaskRunner/{task.Name}");
             await _taskRepository.AddTask(task);
 
             if(task.ScheduleType != ScheduleTypesEnum.WebTrigger)
@@ -95,10 +97,14 @@ namespace Grob.ServiceFabric.Scheduler
             await _grobMaster.DeleteContainerForTaskAsync(task);
         }
 
-        public async Task StartTaskAsync(GrobTask grobTaskToRun)
+        public async Task<Uri> StartTaskAsync(GrobTask grobTaskToRun)
         {
             var registeredTask = await _taskRepository.GetRegisteredTask(grobTaskToRun.Name);
-            registeredTask.LastRunTime = DateTime.Now.ToString();
+
+            if(registeredTask.ScheduleType == ScheduleTypesEnum.WebTrigger)
+            {
+                registeredTask.LastRunTime = DateTime.Now.ToString();
+            }            
 
             if(registeredTask.Status == GrobTaskStatusEnum.Stopped)
             {
@@ -116,7 +122,9 @@ namespace Grob.ServiceFabric.Scheduler
                 runner.RunnerThread.Start();
 
                 await _runnerRepository.AddRunnerAsync(runner);
-            }            
+            }
+
+            return registeredTask.PrivateUrl;
         }
     }
 }

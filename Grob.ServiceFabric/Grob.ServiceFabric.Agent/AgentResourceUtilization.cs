@@ -1,6 +1,7 @@
 ﻿using Grob.Agent.Models;
 using System;
 using System.Collections.Generic;
+using System.ServiceProcess;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace Grob.ServiceFabric.Agent
     {
         private static Queue<string> _cpuUsage = new Queue<string>();
         private static Queue<string> _availableMemory = new Queue<string>();
+        private static ServiceController dockerEngineServiceController = new ServiceController("docker");
+        private static ServiceController dockerForWindowsServiceController = new ServiceController("com.docker.service");
 
         public static void AddAgentInformation(AgentInformation agentInformation)
         {
@@ -26,9 +29,14 @@ namespace Grob.ServiceFabric.Agent
 
         public static AgentInformation GetAgentInformation()
         {
+            dockerEngineServiceController.Refresh();
+            dockerForWindowsServiceController.Refresh();
+
             return new AgentInformation()
             {
-                CpuUsage = GetAverageCPUUsage(_cpuUsage),
+                IsDockerEngineRunning = dockerEngineServiceController.Status == ServiceControllerStatus.Running,
+                IsDockerForWindowsServiceRunning = dockerForWindowsServiceController.Status == ServiceControllerStatus.Running,
+                CpuUsage = GetAverageCPUUsage(_cpuUsage).Length > 5 ? GetAverageCPUUsage(_cpuUsage).Substring(0, 5) : GetAverageCPUUsage(_cpuUsage),
                 AvailableMemory = GetAverageAvailableMemory(_availableMemory)
             };
         }

@@ -75,7 +75,7 @@ namespace Grob.ServiceFabric.Web.Controllers
             {                
                 var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName, newTaskModel.ScheduleType, newTaskModel.ScheduleInfo, newTaskModel.ContainerType);
                 task = await _grobMasterService.CreateContainerForTaskAsync(task);
-                await _grobSchedulerService.AddTaskAsync(task);
+                await _grobSchedulerService.CreateTaskAsync(task);
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception e)

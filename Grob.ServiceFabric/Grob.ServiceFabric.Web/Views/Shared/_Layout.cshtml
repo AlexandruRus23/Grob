@@ -8,6 +8,8 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/materialize.css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -17,7 +19,7 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    @*<nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -36,6 +38,20 @@
                 </ul>
             </div>
         </div>
+    </nav>*@
+    <nav class="nav-wrapper navbar-fixed-top blue lighten-1">
+        <div class="container">
+            <div class="navbar-header">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-logo">Grob</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="right hide-on-med-and-down">
+                    <li><a asp-area="" asp-controller="Task" asp-action="Index">Tasks</a></li>
+                    <li><a asp-area="" asp-controller="Containers" asp-action="Index">Containers</a></li>
+                    <li><a asp-area="" asp-controller="Applications" asp-action="Index">Applications</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
     <div class="container body-content">
         @RenderBody()
@@ -48,6 +64,7 @@
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/materialize.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">

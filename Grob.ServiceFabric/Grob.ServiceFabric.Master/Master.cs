@@ -52,7 +52,7 @@ namespace Grob.ServiceFabric.Master
             //}           
         }
 
-        public async Task RunTaskAsync(GrobTask task)
+        public async Task<Uri> RunTaskAsync(GrobTask task)
         {
             var containers = await GetContainersAsync();
 
@@ -60,9 +60,16 @@ namespace Grob.ServiceFabric.Master
 
             if (container != null)
             {
-                var agents = await GetLeastUsedAgentAsync();
-                await agents.RunContainerAsync(container);
+                var agent = await GetLeastUsedAgentAsync();
+                var result = await agent.RunContainerAsync(container);
+
+                if (result)
+                {
+                    return new Uri(task.PrivateUrl.ToString().Replace("localhost", agent.Uri.Host));
+                }
             }
+
+            return new Uri("this is not a destination");
         }
 
         public async Task<List<Container>> GetContainersAsync()
@@ -88,9 +95,7 @@ namespace Grob.ServiceFabric.Master
             
             foreach(var agent in agents)
             {
-                var information = agent.GetAgentInformation();
-                agent.CpuUsage = information.CpuUsage;
-                agent.AvailableMemory = information.AvailableMemory;
+                agent.Information = agent.GetAgentInformation();
             }
 
             return agents;
@@ -126,7 +131,7 @@ namespace Grob.ServiceFabric.Master
         {
             if(grobTask.ContainerType == ContainerTypeEnum.WebApplication)
             {
-                grobTask.Url = GetUniqueUri(grobTask);
+                grobTask.PrivateUrl = GetUniqueUri(grobTask);
             }
 
             var agents = await _grobAgentRepository.GetGrobAgentsAsync();

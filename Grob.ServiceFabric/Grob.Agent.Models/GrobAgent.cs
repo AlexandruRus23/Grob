@@ -14,16 +14,15 @@ namespace Grob.Agent.Models
 {
     public class GrobAgent : IGrobAgentService
     {        
-        public string Uri { get; set; }
+        public Uri Uri { get; set; }
         public string Name { get; set; }
         public string ServiceFabricNodeName { get; set; }
-        public string CpuUsage { get; set; }
-        public string AvailableMemory { get; set; }
+        public AgentInformation Information { get; set; }
 
         public GrobAgent(string name, string uri, long instanceId, string serviceFabricNodeName)
         {
             Name = name;
-            Uri = uri;
+            Uri = new Uri(uri);
             ServiceFabricNodeName = serviceFabricNodeName;
         }
 
@@ -41,7 +40,7 @@ namespace Grob.Agent.Models
             return containers;
         }
 
-        public async Task<Container> RunContainerAsync(Container container)
+        public async Task<bool> RunContainerAsync(Container container)
         {
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + $"containers/start")
@@ -49,7 +48,8 @@ namespace Grob.Agent.Models
                 Content = new StringContent(JsonConvert.SerializeObject(container), Encoding.UTF8, "application/json")
             };
             var result = await client.SendAsync(request);
-            return container;
+
+            return result.IsSuccessStatusCode;
         }
 
         public void StopContainer(Container container)

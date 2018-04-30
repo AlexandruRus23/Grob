@@ -11,8 +11,6 @@ namespace Grob.Entities.Grob
 {
     public class GrobTask
     {
-        private Thread Runner;
-
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string ApplicationName { get; set; }
@@ -23,7 +21,8 @@ namespace Grob.Entities.Grob
         public string NextRunTime { get; set; }
         public ContainerTypeEnum ContainerType { get; set; }
         public GrobTaskStatusEnum Status { get; set; }
-        public Uri Url { get; set; }
+        public Uri PrivateUrl { get; set; }
+        public Uri PublicUrl { get; set; }
 
         public GrobTask()
         {

@@ -43,7 +43,7 @@ namespace Grob.Docker
                     return parameters;
                 case ContainerTypeEnum.WebApplication:
                     string containerPort = "80";
-                    string hostPort = grobTask.Url.Port.ToString();
+                    string hostPort = grobTask.PrivateUrl.Port.ToString();
 
                     parameters.ExposedPorts = new Dictionary<string, EmptyStruct>()
                     {
@@ -125,38 +125,48 @@ namespace Grob.Docker
 
         public async Task<List<Container>> ListContainers()
         {
+            var result = new List<Container>();
             var parameters = new ContainersListParameters()
             {
                 All = true
             };
 
-            var containers = await _dockerClient.Containers.ListContainersAsync(parameters);
-
-            var result = new List<Container>();
-
-            foreach (var container in containers)
+            try
             {
-                result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault().Substring(1), container.Status));
+                var containers = await _dockerClient.Containers.ListContainersAsync(parameters);
+                foreach (var container in containers)
+                {
+                    result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault().Substring(1), container.Status));
+                }
             }
+            catch
+            {
+
+            }            
 
             return result;
         }
 
         public async Task<List<Application>> ListImagesAsync()
         {
+            var result = new List<Application>();
             var parameters = new ImagesListParameters()
             {
                 //All = true
             };
 
-            var images = await _dockerClient.Images.ListImagesAsync(parameters);
-
-            var result = new List<Application>();
-
-            foreach (var image in images)
+            try
             {
-                result.Add(new Application(image.RepoTags.FirstOrDefault(), image.Created, image.ID, image.Containers, image.Size));
+                var images = await _dockerClient.Images.ListImagesAsync(parameters);
+
+                foreach (var image in images)
+                {
+                    result.Add(new Application(image.RepoTags.FirstOrDefault(), image.Created, image.ID, image.Containers, image.Size));
+                }
             }
+            catch (Exception e)
+            {
+            }            
 
             return result;
         }

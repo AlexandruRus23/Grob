@@ -36,9 +36,17 @@
         }
 
         [Route("containers/start"), HttpPost]
-        public async void RunContainer([FromBody] Container container)
+        public async Task<IHttpActionResult> RunContainer([FromBody] Container container)
         {
-            await _dockerManager.StartContainerAsync(container);
+            try
+            {
+                await _dockerManager.StartContainerAsync(container);
+                return Ok();
+            }
+            catch
+            {
+                return InternalServerError();
+            }            
         }
 
         [Route("containers/stop"), HttpPost]
