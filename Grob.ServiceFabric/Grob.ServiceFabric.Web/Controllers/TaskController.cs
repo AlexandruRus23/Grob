@@ -31,27 +31,36 @@ namespace Grob.ServiceFabric.Web.Controllers
         {
             var model = new TaskViewModel
             {
-                Tasks = _grobSchedulerService.GetTasksAsync().Result
+                Tasks = _grobSchedulerService.GetTasksAsync().Result.OrderBy(t => t.CreationTime).ToList()
             };
 
             return View("Index", model);
-        }
-
-        // GET: Task/Details/5
-        public IActionResult Details(int id)
-        {
-            return View();
         }
 
         // GET: Task/Create
         public IActionResult Create()
         {
             var model = new NewTaskModel();
+
             var applications = _grobMasterService.GetApplicationsAsync().Result;
             applications.ForEach(a => model.RegisteredApplications.Add(new SelectListItem()
             {
                 Text = a.Name,
                 Value = a.Name
+            }));
+
+            var scheduleTypes = Enum.GetValues(typeof(ScheduleTypesEnum)).Cast<ScheduleTypesEnum>().ToList();
+            scheduleTypes.ForEach(s => model.ScheduleTypes.Add(new SelectListItem()
+            {
+                Text = s.ToString(),
+                Value = s.ToString()
+            }));
+
+            var containerTypes = Enum.GetValues(typeof(ContainerTypeEnum)).Cast<ContainerTypeEnum>().ToList();
+            containerTypes.ForEach(c => model.ContainerTypes.Add(new SelectListItem()
+            {
+                Text = c.ToString(),
+                Value = c.ToString()
             }));
 
             return View(model);
@@ -60,59 +69,29 @@ namespace Grob.ServiceFabric.Web.Controllers
         // POST: Task/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(NewTaskModel newTaskModel)
+        public async Task<ActionResult> Create(NewTaskModel newTaskModel)
         {
             try
             {                
-                var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName);
-                _grobMasterService.CreateContainerForTask(task);
-                _grobSchedulerService.AddTaskAsync(task);
+                var task = new GrobTask(newTaskModel.TaskName, newTaskModel.ApplicationName, newTaskModel.ScheduleType, newTaskModel.ScheduleInfo, newTaskModel.ContainerType);
+                task = await _grobMasterService.CreateContainerForTaskAsync(task);
+                await _grobSchedulerService.CreateTaskAsync(task);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }
-        }
-
-        // GET: Task/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Task/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Task/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
         }
 
         // POST: Task/Delete/5
-        [HttpPost]
+        [Route("/delete/{taskId}"), HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(Guid taskId)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                await _grobSchedulerService.DeleteTaskAsync(taskId);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -8,6 +8,7 @@ using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Grob.Constants;
+using System.Linq;
 
 namespace Grob.ServiceFabric.Scheduler.TaskRepository
 {
@@ -27,6 +28,18 @@ namespace Grob.ServiceFabric.Scheduler.TaskRepository
             using (var tx = _stateManager.CreateTransaction())
             {
                 await grobJobs.AddOrUpdateAsync(tx, task.Id, task, (id, value) => task);
+
+                await tx.CommitAsync();
+            }
+        }
+
+        public async Task DeleteTaskAsync(Guid taskId)
+        {
+            var grobJobs = await _stateManager.GetOrAddAsync<IReliableDictionary<Guid, GrobTask>>(RepositoryConstants.TASK_REPOSITORY);
+
+            using (var tx = _stateManager.CreateTransaction())
+            {
+                await grobJobs.TryRemoveAsync(tx, taskId);
 
                 await tx.CommitAsync();
             }
@@ -52,6 +65,12 @@ namespace Grob.ServiceFabric.Scheduler.TaskRepository
             }
 
             return result;
+        }
+
+        public async Task<GrobTask> GetRegisteredTask(string grobTaskName)
+        {
+            var tasks = await GetTasks();
+            return tasks.Where(t => t.Name == grobTaskName).FirstOrDefault();
         }
     }
 }

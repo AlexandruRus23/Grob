@@ -25,13 +25,48 @@ namespace Grob.Docker
 
         public async Task CreateContainerAsync(GrobTask grobTask)
         {
+            var parameters = GetCreateParameters(grobTask);
+            await _dockerClient.Containers.CreateContainerAsync(parameters);
+        }
+
+        private CreateContainerParameters GetCreateParameters(GrobTask grobTask)
+        {
             var parameters = new CreateContainerParameters()
             {
                 Image = grobTask.ApplicationName,
-                Name = grobTask.Name
+                Name = GetContainerName(grobTask),
             };
 
-            await _dockerClient.Containers.CreateContainerAsync(parameters);
+            switch (grobTask.ContainerType)
+            {
+                case ContainerTypeEnum.Executable:
+                    return parameters;
+                case ContainerTypeEnum.WebApplication:
+                    string containerPort = "80";
+                    string hostPort = grobTask.PrivateUrl.Port.ToString();
+
+                    parameters.ExposedPorts = new Dictionary<string, EmptyStruct>()
+                    {
+                        { containerPort, new EmptyStruct() }
+                    };
+                    parameters.HostConfig = new HostConfig()
+                    {
+                        PortBindings = new Dictionary<string, IList<PortBinding>>()
+                        {
+                            {
+                                containerPort,
+                                new List<PortBinding>()
+                                {
+                                    new PortBinding() { HostPort = hostPort }
+                                }
+                            }
+                        }
+                    };
+                    
+                    break;
+            }
+
+            return parameters;
         }
 
         public async Task CreateImageAsync(string workingDirectory, string name)
@@ -58,60 +93,80 @@ namespace Grob.Docker
 
                 var output = process.StandardOutput.ReadToEnd();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
-            }            
+            }
         }
 
-        public async Task CreateImageAsync(Stream contents, string dockerFilePath,string name)
+        public async Task CreateImageAsync(Stream contents, string dockerFilePath, string name)
         {
             var parameters = new ImageBuildParameters()
             {
                 Dockerfile = dockerFilePath,
                 Tags = new List<string>() { name.ToLower() },
-                                
+
             };
 
             await _dockerClient.Images.BuildImageFromDockerfileAsync(contents, parameters);
         }
 
+        public async Task DeleteContainerAsync(GrobTask grobTask)
+        {
+            var containers = await ListContainers();
+            var containerToDelete = containers.Where(c => c.Name == GetContainerName(grobTask)).FirstOrDefault();
+            if (containerToDelete != null)
+            {
+                await _dockerClient.Containers.StopContainerAsync(containerToDelete.Id, new ContainerStopParameters());
 
+                await _dockerClient.Containers.RemoveContainerAsync(containerToDelete.Id, new ContainerRemoveParameters());
+            }
+        }
 
         public async Task<List<Container>> ListContainers()
         {
+            var result = new List<Container>();
             var parameters = new ContainersListParameters()
             {
                 All = true
             };
 
-            var containers = await _dockerClient.Containers.ListContainersAsync(parameters);
-
-            var result = new List<Container>();
-
-            foreach (var container in containers)
+            try
             {
-                result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault(), container.Status));
+                var containers = await _dockerClient.Containers.ListContainersAsync(parameters);
+                foreach (var container in containers)
+                {
+                    result.Add(new Container(container.Command, container.Created, container.ID, container.Image, container.Names.FirstOrDefault().Substring(1), container.Status));
+                }
             }
+            catch
+            {
+
+            }            
 
             return result;
         }
 
         public async Task<List<Application>> ListImagesAsync()
         {
+            var result = new List<Application>();
             var parameters = new ImagesListParameters()
             {
                 //All = true
             };
 
-            var images = await _dockerClient.Images.ListImagesAsync(parameters);
-
-            var result = new List<Application>();
-
-            foreach (var image in images)
+            try
             {
-                result.Add(new Application(image.RepoTags.FirstOrDefault(), image.Created, image.ID, image.Containers, image.Size));
+                var images = await _dockerClient.Images.ListImagesAsync(parameters);
+
+                foreach (var image in images)
+                {
+                    result.Add(new Application(image.RepoTags.FirstOrDefault(), image.Created, image.ID, image.Containers, image.Size));
+                }
             }
+            catch (Exception e)
+            {
+            }            
 
             return result;
         }
@@ -119,6 +174,22 @@ namespace Grob.Docker
         public async Task StartContainerAsync(Container container)
         {
             await _dockerClient.Containers.StartContainerAsync(container.Id, new ContainerStartParameters());
+
+            var startedContainer = ListContainers().Result.Where(c => c.Id == container.Id).FirstOrDefault();
+            while (!startedContainer.Status.Contains("Up"))
+            {
+
+            }
+        }
+
+        private string GetContainerName(GrobTask grobTask)
+        {
+            return grobTask.Name.ToLower().Replace(" ", string.Empty);
+        }
+
+        public async Task StopContainerAsync(Container container)
+        {
+            await _dockerClient.Containers.StopContainerAsync(container.Id, new ContainerStopParameters());
         }
     }
 }

@@ -14,13 +14,16 @@ namespace Grob.Agent.Models
 {
     public class GrobAgent : IGrobAgentService
     {        
-        public string Uri { get; set; }
+        public Uri Uri { get; set; }
         public string Name { get; set; }
+        public string ServiceFabricNodeName { get; set; }
+        public AgentInformation Information { get; set; }
 
-        public GrobAgent(string name, string uri, long instanceId)
+        public GrobAgent(string name, string uri, long instanceId, string serviceFabricNodeName)
         {
             Name = name;
-            Uri = uri;
+            Uri = new Uri(uri);
+            ServiceFabricNodeName = serviceFabricNodeName;
         }
 
         public GrobAgent()
@@ -37,9 +40,26 @@ namespace Grob.Agent.Models
             return containers;
         }
 
-        public void RunContainer(Container container)
+        public async Task<bool> RunContainerAsync(Container container)
         {
-            throw new NotImplementedException();
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + $"containers/start")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(container), Encoding.UTF8, "application/json")
+            };
+            var result = await client.SendAsync(request);
+
+            return result.IsSuccessStatusCode;
+        }
+
+        public void StopContainer(Container container)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + $"containers/stop")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(container), Encoding.UTF8, "application/json")
+            };
+            var result = client.SendAsync(request).Result;
         }
 
         public List<Application> GetApplications()
@@ -61,5 +81,23 @@ namespace Grob.Agent.Models
             };
             var result = client.SendAsync(request).Result;
         }
+
+        public void DeleteContainers(GrobTask grobTask)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Delete, Uri.ToString() + "containers")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(grobTask), Encoding.UTF8, "application/json")
+            };
+            var result = client.SendAsync(request).Result;
+        }
+
+        public AgentInformation GetAgentInformation()
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, Uri.ToString() + "information");
+            var result = client.SendAsync(request).Result;
+            return JsonConvert.DeserializeObject<AgentInformation>(result.Content.ReadAsStringAsync().Result);
+        }        
     }
 }

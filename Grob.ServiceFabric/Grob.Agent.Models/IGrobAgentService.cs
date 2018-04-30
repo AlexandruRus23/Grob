@@ -8,9 +8,12 @@ namespace Grob.Agent.Models
 {        
     public interface IGrobAgentService 
     {
-        void RunContainer(Container container);
+        Task<bool> RunContainerAsync(Container container);
+        void StopContainer(Container container);
         List<Container> GetContainers();
         List<Application> GetApplications();
         void CreateContainers(GrobTask grobTask);
+        void DeleteContainers(GrobTask grobTask);
+        AgentInformation GetAgentInformation();
     }
 }

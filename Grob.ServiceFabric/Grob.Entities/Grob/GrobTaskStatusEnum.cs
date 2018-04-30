@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grob.ServiceFabric.Scheduler.Schedule
+namespace Grob.Entities.Grob
 {
-    public interface IScheduleRunner
+    public enum GrobTaskStatusEnum
     {
-        void Start();
-        Task RunAsync();
+        Stopped,
+        Running
     }
 }

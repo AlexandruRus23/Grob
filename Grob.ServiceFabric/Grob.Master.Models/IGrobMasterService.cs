@@ -3,6 +3,7 @@ using Grob.Entities.Docker;
 using Grob.Entities.Grob;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.FabricTransport;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,11 +13,13 @@ namespace Grob.Master.Models
 {
     public interface IGrobMasterService : IService
     {
-        Task RunTask(GrobTask task);
+        Task<Uri> RunTaskAsync(GrobTask task);
+        Task StopTask(GrobTask task);
         Task<List<Container>> GetContainersAsync();
         Task<List<GrobAgent>> GetGrobAgentsAsync();
         Task RegisterAgentAsync(GrobAgent grobAgent);
         Task<List<Application>> GetApplicationsAsync();
-        Task CreateContainerForTask(GrobTask grobTask);
+        Task<GrobTask> CreateContainerForTaskAsync(GrobTask grobTask);
+        Task DeleteContainerForTaskAsync(GrobTask grobTask);
     }
 }

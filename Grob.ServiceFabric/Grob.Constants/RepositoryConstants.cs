@@ -11,6 +11,7 @@ namespace Grob.Constants
         public const string AGENT_REPOSITORY = "GrobAgents";
         public const string CONTAINER_REPOSITORY = "GrobContainers";
         public const string TASK_REPOSITORY = "GrobJobs";
+        public const string RUNNERS_REPOSITORY = "GrobRunners";
 
     }
 }

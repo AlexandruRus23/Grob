@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Grob.Entities.Grob
@@ -14,17 +16,29 @@ namespace Grob.Entities.Grob
         public string ApplicationName { get; set; }
         public ScheduleTypesEnum ScheduleType { get; set; }
         public string ScheduleInfo { get; set; }
+        public DateTime CreationTime { get; set; }
+        public string LastRunTime { get; set; }        
+        public string NextRunTime { get; set; }
+        public ContainerTypeEnum ContainerType { get; set; }
+        public GrobTaskStatusEnum Status { get; set; }
+        public Uri PrivateUrl { get; set; }
+        public Uri PublicUrl { get; set; }
 
         public GrobTask()
         {
-
         }
 
-        public GrobTask(string name, string applicationName)
+        public GrobTask(string name, string applicationName, ScheduleTypesEnum scheduleType, string scheduleInfo, ContainerTypeEnum containerType) : this()
         {
+            Id = Guid.NewGuid();
             Name = name;
             ApplicationName = applicationName;
-            Id = Guid.NewGuid();
+            ScheduleType = scheduleType;
+            ScheduleInfo = scheduleInfo;
+            CreationTime = DateTime.Now;
+            LastRunTime = "-1";
+            NextRunTime = "-1";
+            ContainerType = containerType;
         }
     }
 }

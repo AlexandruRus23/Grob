@@ -32,6 +32,11 @@ namespace Grob.Docker
             return;
         }
 
+        public Task DeleteContainerAsync(GrobTask grobTask)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<Container>> ListContainers()
         {
             return new List<Container>();
@@ -45,6 +50,11 @@ namespace Grob.Docker
         public async Task StartContainerAsync(Container containerName)
         {
             return;
+        }
+
+        public Task StopContainerAsync(Container containerName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

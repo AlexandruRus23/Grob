@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Grob.Master.Models\Grob.Master.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.ServiceProcess" />
+  </ItemGroup>
+
 </Project>

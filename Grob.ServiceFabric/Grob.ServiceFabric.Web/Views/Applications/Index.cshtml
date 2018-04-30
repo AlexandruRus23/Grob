@@ -6,23 +6,30 @@
 
 <div>
     <div>
-        @Html.ActionLink("Add application", "create", "applications", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+        @Html.ActionLink("Add application", "create", "applications", routeValues: null, htmlAttributes: new { @class = "btn blue darken-3" })
     </div>
     <div>
-        <h2>Containers</h2>
-        <div class="containers-list">
-            @foreach (Grob.Entities.Docker.Application application in Model.Applications)
-            {
-                <hr class="container-separator">
-                <div class="container-row">
-                    <div class="container-name-container">@Html.DisplayFor(m => application.Created)</div>
-                    <div class="container-name-container">@Html.DisplayFor(m => application.ID)</div>
-                    <div class="container-name-container">@Html.DisplayFor(m => application.Name)</div>
-                    <div class="container-name-container">@Html.DisplayFor(m => application.Size)</div>
-                    <div class="container-name-container">@Html.DisplayFor(m => application.Containers)</div>                    
-                    @*@Html.ActionLink("Delete", "delete", "applications", routeValues: null, htmlAttributes: new { @class = "btn btn-danger" })*@
-                </div>
-            }
+        <h2>Applications</h2>
+        <div>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Created</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Grob.Entities.Docker.Application application in Model.Applications)
+                    {
+                        <tr>
+                            <th>@application.Created</th>
+                            <th>@application.Name</th>
+                            <th>@application.Size</th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

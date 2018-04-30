@@ -15,6 +15,7 @@ using Grob.Scheduler.Models;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Grob.ServiceFabric.Scheduler.TaskRepository;
 using Grob.ServiceFabric.Scheduler.Schedule;
+using Grob.ServiceFabric.Scheduler.RunnerRepository;
 
 namespace Grob.ServiceFabric.Scheduler
 {
@@ -24,12 +25,17 @@ namespace Grob.ServiceFabric.Scheduler
     internal sealed class Scheduler : StatefulService, IGrobSchedulerService
     {
         private ITaskRepository _taskRepository;
+        private IRunnerRepository _runnerRepository;
         private IGrobMasterService _grobMaster;
 
         public Scheduler(StatefulServiceContext context)
             : base(context)
         {
             _taskRepository = new ServiceFabricTaskRepository(this.StateManager);
+
+            //_runnerRepository = new ServiceFabricRunnerRepository(this.StateManager);
+            _runnerRepository = new SimpleRunnerRepository();
+
             _grobMaster = ServiceProxy.Create<IGrobMasterService>(new Uri("fabric:/Grob.ServiceFabric/Grob.ServiceFabric.Master"), new ServicePartitionKey(1));
         }        
 
@@ -71,11 +77,54 @@ namespace Grob.ServiceFabric.Scheduler
             return await _taskRepository.GetTasks();
         }
 
-        public async Task AddTaskAsync(GrobTask task)
+        public async Task CreateTaskAsync(GrobTask task)
         {
+            // CHANGE THIS TO PUBLIC IP OF CLUSTER
+            task.PublicUrl = new Uri($"http://localhost:8080/api/GrobTaskRunner/{task.Name}");
             await _taskRepository.AddTask(task);
-            var runner = SchedulerFactory.GetScheduler(task);
-            runner.Start();            
+
+            if(task.ScheduleType != ScheduleTypesEnum.WebTrigger)
+            {
+                await StartTaskAsync(task);
+            }            
+        }
+
+        public async Task DeleteTaskAsync(Guid taskId)
+        {
+            var task = GetTasksAsync().Result.Where(t => t.Id == taskId).FirstOrDefault();
+            await _taskRepository.DeleteTaskAsync(taskId);
+            await _runnerRepository.StopRunner(task.Id);
+            await _grobMaster.DeleteContainerForTaskAsync(task);
+        }
+
+        public async Task<Uri> StartTaskAsync(GrobTask grobTaskToRun)
+        {
+            var registeredTask = await _taskRepository.GetRegisteredTask(grobTaskToRun.Name);
+
+            if(registeredTask.ScheduleType == ScheduleTypesEnum.WebTrigger)
+            {
+                registeredTask.LastRunTime = DateTime.Now.ToString();
+            }            
+
+            if(registeredTask.Status == GrobTaskStatusEnum.Stopped)
+            {
+                registeredTask.Status = GrobTaskStatusEnum.Running;
+                var runner = SchedulerFactory.GetRunner(registeredTask, _grobMaster);
+
+                // if task is webtrigger, then wait for the task to run
+                if (registeredTask.ScheduleType == ScheduleTypesEnum.WebTrigger)
+                {
+                    await runner.RunAsync();
+                    //Thread.Sleep(500);
+                }
+
+                runner.RunnerThread = new Thread(runner.Start);
+                runner.RunnerThread.Start();
+
+                await _runnerRepository.AddRunnerAsync(runner);
+            }
+
+            return registeredTask.PrivateUrl;
         }
     }
 }

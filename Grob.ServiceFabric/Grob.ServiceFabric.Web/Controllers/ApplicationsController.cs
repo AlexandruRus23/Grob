@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Grob.Docker;
+using Grob.Entities.Grob;
 using Grob.Master.Models;
 using Grob.ServiceFabric.Web.Models.Applications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 
@@ -46,7 +48,17 @@ namespace Grob.ServiceFabric.Web.Controllers
         // GET: Applications/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new NewApplicationViewModel();
+            
+            var applicationTypes = Enum.GetValues(typeof(ApplicationTypeEnum)).Cast<ApplicationTypeEnum>().ToList();
+
+            applicationTypes.ForEach(type => model.ApplicationTypes.Add(new SelectListItem()
+            {
+                Value = type.ToString(),
+                Text = type.ToString()
+            }));
+
+            return View(model);
         }
 
         // POST: Applications/Create
@@ -71,7 +83,7 @@ namespace Grob.ServiceFabric.Web.Controllers
 
                 ZipFile.ExtractToDirectory(archivePath, extractPath);
 
-                CreateDockerFile(extractPath, model.Name);
+                CreateDockerFile(extractPath, model.Name, model.ApplicationType);
                 await _dockerManager.CreateImageAsync($"{Directory.GetCurrentDirectory()}/{extractPath}", model.Name.ToLower());
 
                 return RedirectToAction(nameof(Index));
@@ -86,16 +98,28 @@ namespace Grob.ServiceFabric.Web.Controllers
             }
         }
 
-        private void CreateDockerFile(string extractionPath, string executableToRun)
+        private void CreateDockerFile(string extractionPath, string entryPointFile, ApplicationTypeEnum applicationType)
         {
             var dockerFilePath = $"{extractionPath}/Dockerfile";
 
             //System.IO.File.Create(dockerFilePath);
-
             var content = new StringBuilder();
-            content.AppendLine("FROM microsoft/windowsservercore");
-            content.AppendLine("ADD . grobPackage");
-            content.AppendLine($"ENTRYPOINT [\"C:\\\\grobPackage\\\\{executableToRun}.exe\"]");
+
+            switch (applicationType)
+            {
+                case ApplicationTypeEnum.DotnetFramework:
+                    content.AppendLine("FROM microsoft/windowsservercore");
+                    content.AppendLine("ADD . grobPackage");
+                    content.AppendLine($"ENTRYPOINT [\"C:\\\\grobPackage\\\\{entryPointFile}.exe\"]");
+                    break;
+                case ApplicationTypeEnum.AspNetCore:
+                    content.AppendLine("FROM microsoft/aspnetcore");
+                    content.AppendLine("ADD . grobPackage");
+                    content.AppendLine("WORKDIR /grobPackage");
+                    content.AppendLine($"ENTRYPOINT [\"dotnet\", \"{entryPointFile}.dll\"]");
+                    break;
+            }
+            
 
             using (var streamWriter = new StreamWriter(dockerFilePath))
             {
