@@ -39,8 +39,9 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
 
         public override async Task RunAsync()
         {
-            var uri = await GrobMasterService.RunTaskAsync(GrobTask);
-            GrobTask.PrivateUrl = uri;
+            var logs = await GrobMasterService.RunTaskAsync(GrobTask);
+            GrobTask.Logs.Add(logs);
+            GrobTask.PrivateUrl = logs.PrivateUri;
         }
 
         public override void Stop()

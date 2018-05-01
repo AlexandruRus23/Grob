@@ -35,7 +35,8 @@ namespace Grob.ServiceFabric.Scheduler.Schedule
         public override void Run()
         {
             GrobTask.LastRunTime = DateTime.Now.ToString();
-            GrobMasterService.RunTaskAsync(GrobTask);
+            var logs = GrobMasterService.RunTaskAsync(GrobTask).Result;
+            GrobTask.Logs.Add(logs);
         }
 
         public override void Stop()

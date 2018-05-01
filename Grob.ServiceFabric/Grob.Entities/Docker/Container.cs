@@ -14,6 +14,7 @@ namespace Grob.Entities.Docker
         public string Name { get; set; }
         public string Id { get; set; }
         public string Status { get; set; }
+        public string AgentName { get; set; }
 
         public Container(string command, DateTime created, string id, string image, string name, string status)
         {

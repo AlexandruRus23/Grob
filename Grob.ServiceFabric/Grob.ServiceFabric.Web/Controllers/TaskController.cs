@@ -36,7 +36,19 @@ namespace Grob.ServiceFabric.Web.Controllers
 
             return View("Index", model);
         }
+        
+        [Route("task/{taskName}"),HttpGet]
+        public async Task<IActionResult> Details([FromRoute]string taskName)
+        {
+            var model = new TaskDetailsModel()
+            {
+                GrobTask = await _grobSchedulerService.GetTaskAsync(taskName)
+            };
 
+            return View("TaskDetails", model);
+        }
+
+        [Route("task/create"), HttpGet]
         // GET: Task/Create
         public IActionResult Create()
         {

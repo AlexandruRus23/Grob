@@ -36,7 +36,6 @@ namespace Grob.Agent.Models
             var request = new HttpRequestMessage(HttpMethod.Get, Uri.ToString() + "containers");
             var result = client.SendAsync(request).Result;
             var containers = JsonConvert.DeserializeObject<List<Container>>(result.Content.ReadAsStringAsync().Result);
-
             return containers;
         }
 
@@ -92,12 +91,20 @@ namespace Grob.Agent.Models
             var result = client.SendAsync(request).Result;
         }
 
+        public Task<string> GetLogsForTaskAsync(GrobTask task)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + "containers/logs");
+            var result = client.SendAsync(request).Result;
+            return result.Content.ReadAsStringAsync();
+        }
+
         public AgentInformation GetAgentInformation()
         {
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Get, Uri.ToString() + "information");
             var result = client.SendAsync(request).Result;
             return JsonConvert.DeserializeObject<AgentInformation>(result.Content.ReadAsStringAsync().Result);
-        }        
+        }
     }
 }

@@ -52,24 +52,34 @@ namespace Grob.ServiceFabric.Master
             //}           
         }
 
-        public async Task<Uri> RunTaskAsync(GrobTask task)
+        public async Task<GrobTaskLogs> RunTaskAsync(GrobTask task)
         {
             var containers = await GetContainersAsync();
-
-            var container = containers.Where(c => c.Name == task.Name.ToLower().Replace(" ", string.Empty))?.FirstOrDefault();
+            var containerName = task.Name.ToLower().Replace(" ", string.Empty);
+            var container = containers.Where(c => c.Name == containerName)?.FirstOrDefault();
+            var taskLogs = new GrobTaskLogs();
 
             if (container != null)
             {
                 var agent = await GetLeastUsedAgentAsync();
-                var result = await agent.RunContainerAsync(container);
+                taskLogs.Agent = agent.Name;
 
-                if (result)
+                var result = await agent.RunContainerAsync(container);
+                taskLogs.WasSuccessful = result;
+
+                string privateUri = string.Empty;
+
+                if (result && task.ContainerType == ContainerTypeEnum.WebApplication)
                 {
-                    return new Uri(task.PrivateUrl.ToString().Replace("localhost", agent.Uri.Host));
+                    privateUri = task.PrivateUrl.ToString().Replace("localhost", agent.Uri.Host);
                 }
+
+                taskLogs.PrivateUri = privateUri;
+                taskLogs.Logs = await agent.GetLogsForTaskAsync(task);
+                taskLogs.Timestamp = task.LastRunTime;                
             }
 
-            return new Uri("this is not a destination");
+            return taskLogs;
         }
 
         public async Task<List<Container>> GetContainersAsync()
@@ -78,7 +88,9 @@ namespace Grob.ServiceFabric.Master
 
             foreach (var agent in await _grobAgentRepository.GetGrobAgentsAsync())
             {
-                result.AddRange(agent.GetContainers());
+                var containers = agent.GetContainers();
+                containers.ForEach(c => c.AgentName = agent.Name);
+                result.AddRange(containers);
             }
 
             return result;
@@ -131,11 +143,15 @@ namespace Grob.ServiceFabric.Master
         {
             if(grobTask.ContainerType == ContainerTypeEnum.WebApplication)
             {
-                grobTask.PrivateUrl = GetUniqueUri(grobTask);
+                grobTask.PrivateUrl = GetUniqueUri(grobTask).ToString();
             }
 
             var agents = await _grobAgentRepository.GetGrobAgentsAsync();
             agents.ForEach(a => a.CreateContainers(grobTask));
+
+            var allContainers = await GetContainersAsync();
+            var containerNames = grobTask.Name.ToLower().Replace(" ", string.Empty);
+            grobTask.Containers = allContainers.Where(c => c.Name == containerNames).ToList();
 
             return grobTask;
         }

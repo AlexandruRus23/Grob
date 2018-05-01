@@ -37,6 +37,11 @@ namespace Grob.Docker
             throw new NotImplementedException();
         }
 
+        public Task GetLogsForTaskAsync(GrobTask grobTask)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<Container>> ListContainers()
         {
             return new List<Container>();
@@ -52,7 +57,17 @@ namespace Grob.Docker
             return;
         }
 
-        public Task StopContainerAsync(Container containerName)
+        public async Task<string> StopContainerAsync(Container containerName)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<string> IDockerManager.GetLogsForTaskAsync(GrobTask grobTask)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IDockerManager.StopContainerAsync(Container containerName)
         {
             throw new NotImplementedException();
         }

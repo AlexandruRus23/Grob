@@ -84,7 +84,7 @@ namespace Grob.ServiceFabric.Agent
                 };
 
                 AgentResourceUtilization.AddAgentInformation(agentInformation);
-                Thread.Sleep(1000);
+                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
         }
 

@@ -1,0 +1,108 @@
+﻿@model Grob.ServiceFabric.Web.Models.Tasks.TaskDetailsModel
+
+@{
+    ViewData["Title"] = "TaskDetails";
+}
+
+<h2>@Model.GrobTask.Name</h2>
+
+<div>
+    <table>
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <th>@Model.GrobTask.Name</th>
+            </tr>
+            <tr>
+                <th>ApplicationName</th>
+                <th>@Model.GrobTask.ApplicationName</th>
+            </tr>
+            <tr>
+                <th>Schedule type</th>
+                <th>@Model.GrobTask.ScheduleType</th>
+            </tr>
+            <tr>
+                <th>Container type</th>
+                <th>@Model.GrobTask.ContainerType</th>
+            </tr>
+            <tr>
+                <th>Last run</th>
+                <th>@Model.GrobTask.LastRunTime</th>
+            </tr>
+            <tr>
+                <th>Next run</th>
+                <th>@Model.GrobTask.NextRunTime</th>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <th>@Model.GrobTask.Status</th>
+            </tr>
+            <tr>
+                <th>Private url</th>
+                <th>@Model.GrobTask.PrivateUrl</th>
+            </tr>
+            <tr>
+                <th>Public url</th>
+                <th>@Model.GrobTask.PublicUrl</th>
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Command</th>
+                <th>Created</th>
+                <th>Image</th>
+                <th>Status</th>
+                <th>Agent name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var container in Model.GrobTask.Containers)
+            {
+                <tr>
+                    <th>@container.Name</th>
+                    <th>@container.Command</th>
+                    <th>@container.Created</th>
+                    <th>@container.Image</th>
+                    <th>@container.Status</th>
+                    <th>@container.AgentName</th>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Agent</th>
+                <th>Logs</th>
+                <th>Success</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model.GrobTask.Logs)
+            {
+                <tr>
+                    <th>@log.Timestamp</th>
+                    <th>@log.Agent</th>
+                    <th>@log.Logs</th>
+                    @if (log.WasSuccessful)
+                    {
+                        <th>Yes</th>
+                    }
+                    else
+                    {
+                        <th>No</th>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -16,5 +16,6 @@ namespace Grob.Docker
         Task CreateImageAsync(Stream contents, string dockerFilePath, string name);
         Task CreateContainerAsync(GrobTask grobTask);
         Task DeleteContainerAsync(GrobTask grobTask);
+        Task<string> GetLogsForTaskAsync(GrobTask grobTask);
     }
 }

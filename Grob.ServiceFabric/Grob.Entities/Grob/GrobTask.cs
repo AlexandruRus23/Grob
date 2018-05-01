@@ -21,11 +21,15 @@ namespace Grob.Entities.Grob
         public string NextRunTime { get; set; }
         public ContainerTypeEnum ContainerType { get; set; }
         public GrobTaskStatusEnum Status { get; set; }
-        public Uri PrivateUrl { get; set; }
-        public Uri PublicUrl { get; set; }
+        public string PrivateUrl { get; set; }
+        public string PublicUrl { get; set; }
+        public List<Container> Containers { get; set; }
+        public List<GrobTaskLogs> Logs { get; set; }
 
         public GrobTask()
         {
+            Containers = new List<Container>();
+            Logs = new List<GrobTaskLogs>();
         }
 
         public GrobTask(string name, string applicationName, ScheduleTypesEnum scheduleType, string scheduleInfo, ContainerTypeEnum containerType) : this()

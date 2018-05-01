@@ -24,9 +24,18 @@
         }
 
         [Route("containers"), HttpPost]
-        public async void CreateContainer([FromBody] GrobTask grobTask)
+        public async Task<IHttpActionResult> CreateContainer([FromBody] GrobTask grobTask)
         {
-            await _dockerManager.CreateContainerAsync(grobTask);
+            try
+            {
+                await _dockerManager.CreateContainerAsync(grobTask);
+                return Ok();
+            }
+            catch
+            {
+                return InternalServerError();
+            }
+            
         }
 
         [Route("containers"), HttpDelete]
@@ -47,6 +56,20 @@
             {
                 return InternalServerError();
             }            
+        }
+
+        [Route("containers/logs"), HttpPost]
+        public async Task<IHttpActionResult> GetContainerLogs([FromBody] GrobTask grobTask)
+        {
+            try
+            {
+                var result = await _dockerManager.GetLogsForTaskAsync(grobTask);
+                return Ok(result);
+            }
+            catch
+            {
+                return InternalServerError();
+            }
         }
 
         [Route("containers/stop"), HttpPost]

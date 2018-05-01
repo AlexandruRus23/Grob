@@ -77,10 +77,16 @@ namespace Grob.ServiceFabric.Scheduler
             return await _taskRepository.GetTasks();
         }
 
+        public async Task<GrobTask> GetTaskAsync(string taskName)
+        {
+            var allTasks = await _taskRepository.GetTasks();
+            return allTasks.Where(t => t.Name == taskName).FirstOrDefault();
+        }
+
         public async Task CreateTaskAsync(GrobTask task)
         {
             // CHANGE THIS TO PUBLIC IP OF CLUSTER
-            task.PublicUrl = new Uri($"http://localhost:8080/api/GrobTaskRunner/{task.Name}");
+            task.PublicUrl = $"http://localhost:8080/api/GrobTaskRunner/{task.Name}";
             await _taskRepository.AddTask(task);
 
             if(task.ScheduleType != ScheduleTypesEnum.WebTrigger)
@@ -97,7 +103,7 @@ namespace Grob.ServiceFabric.Scheduler
             await _grobMaster.DeleteContainerForTaskAsync(task);
         }
 
-        public async Task<Uri> StartTaskAsync(GrobTask grobTaskToRun)
+        public async Task<string> StartTaskAsync(GrobTask grobTaskToRun)
         {
             var registeredTask = await _taskRepository.GetRegisteredTask(grobTaskToRun.Name);
 

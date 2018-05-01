@@ -46,6 +46,7 @@
     <Compile Include="Grob\ApplicationTypeEnum.cs" />
     <Compile Include="Grob\ContainerTypeEnum.cs" />
     <Compile Include="Grob\GrobTask.cs" />
+    <Compile Include="Grob\GrobTaskLogs.cs" />
     <Compile Include="Grob\GrobTaskStatusEnum.cs" />
     <Compile Include="Grob\ScheduleTypesEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

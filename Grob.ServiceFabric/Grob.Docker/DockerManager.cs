@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,7 +44,8 @@ namespace Grob.Docker
                     return parameters;
                 case ContainerTypeEnum.WebApplication:
                     string containerPort = "80";
-                    string hostPort = grobTask.PrivateUrl.Port.ToString();
+                    Uri hostUri = new Uri(grobTask.PrivateUrl);
+                    string hostPort = hostUri.Port.ToString();
 
                     parameters.ExposedPorts = new Dictionary<string, EmptyStruct>()
                     {
@@ -174,12 +176,24 @@ namespace Grob.Docker
         public async Task StartContainerAsync(Container container)
         {
             await _dockerClient.Containers.StartContainerAsync(container.Id, new ContainerStartParameters());
-
-            var startedContainer = ListContainers().Result.Where(c => c.Id == container.Id).FirstOrDefault();
-            while (!startedContainer.Status.Contains("Up"))
+            var allContainers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters());
+            var startedContainer = allContainers.Where(c => c.ID == container.Id).FirstOrDefault();
+            if(startedContainer.Ports.Count > 0)
             {
-
-            }
+                using (TcpClient tcpClient = new TcpClient())
+                {
+                    while (true)
+                        try
+                        {
+                            tcpClient.Connect("127.0.0.1", startedContainer.Ports.FirstOrDefault().PublicPort);
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Port closed");
+                        }
+                }
+            }            
         }
 
         private string GetContainerName(GrobTask grobTask)
@@ -190,6 +204,23 @@ namespace Grob.Docker
         public async Task StopContainerAsync(Container container)
         {
             await _dockerClient.Containers.StopContainerAsync(container.Id, new ContainerStopParameters());
+        }
+
+        public async Task<string> GetLogsForTaskAsync(GrobTask grobTask)
+        {
+            var containerName = GetContainerName(grobTask);
+            var container = ListContainers().Result.Where(c => c.Name == containerName).FirstOrDefault();
+
+            var logs = await _dockerClient.Containers.GetContainerLogsAsync(container.Id, new ContainerLogsParameters()
+            {
+                Since = grobTask.LastRunTime.ToString()
+            });
+
+            using (var streamReader = new StreamReader(logs))
+            {
+                var content = streamReader.ReadToEnd();
+                return content;
+            }
         }
     }
 }

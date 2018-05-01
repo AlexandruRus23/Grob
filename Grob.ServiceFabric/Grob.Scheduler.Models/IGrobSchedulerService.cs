@@ -12,7 +12,8 @@ namespace Grob.Scheduler.Models
     {
         Task CreateTaskAsync(GrobTask task);
         Task<List<GrobTask>> GetTasksAsync();
+        Task<GrobTask> GetTaskAsync(string taskName);
         Task DeleteTaskAsync(Guid taskId);
-        Task<Uri> StartTaskAsync(GrobTask grobTaskToRun);
+        Task<string> StartTaskAsync(GrobTask grobTaskToRun);
     }
 }
