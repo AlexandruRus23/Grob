@@ -17,6 +17,7 @@ namespace Grob.ServiceFabric.Web.Models.Tasks
         public ContainerTypeEnum ContainerType { get; set; }
         public List<SelectListItem> ContainerTypes { get; set; } 
         public List<SelectListItem> RegisteredApplications { get; set; }
+        public int RequiredMemory { get; set; }
         
 
         public NewTaskModel()

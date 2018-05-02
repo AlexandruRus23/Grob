@@ -61,21 +61,30 @@ namespace Grob.ServiceFabric.Master
 
             if (container != null)
             {
-                var agent = await GetLeastUsedAgentAsync();
-                taskLogs.Agent = agent.Name;
-
-                var result = await agent.RunContainerAsync(container);
-                taskLogs.WasSuccessful = result;
-
-                string privateUri = string.Empty;
-
-                if (result && task.ContainerType == ContainerTypeEnum.WebApplication)
+                var agent = await GetLeastUsedAgentAsync(task);
+                if(agent != null)
                 {
-                    privateUri = task.PrivateUrl.ToString().Replace("localhost", agent.Uri.Host);
+                    taskLogs.Agent = agent.Name;
+
+                    var result = await agent.RunContainerAsync(container);
+                    taskLogs.WasSuccessful = result;
+
+                    string privateUri = string.Empty;
+
+                    if (result && task.ContainerType == ContainerTypeEnum.WebApplication)
+                    {
+                        privateUri = task.PrivateUrl.ToString().Replace("localhost", agent.Uri.Host);
+                    }
+
+                    taskLogs.PrivateUri = privateUri;
+                    //taskLogs.Logs = await agent.GetLogsForTaskAsync(task);
+                }
+                else
+                {
+                    taskLogs.Agent = "No agent was able to run task";
+                    taskLogs.WasSuccessful = false;
                 }
 
-                taskLogs.PrivateUri = privateUri;
-                taskLogs.Logs = await agent.GetLogsForTaskAsync(task);
                 taskLogs.Timestamp = task.LastRunTime;                
             }
 
@@ -113,9 +122,20 @@ namespace Grob.ServiceFabric.Master
             return agents;
         }
 
-        private async Task<GrobAgent> GetLeastUsedAgentAsync()
+        private async Task<GrobAgent> GetLeastUsedAgentAsync(GrobTask grobTask = null)
         {
             var allAgents = await _grobAgentRepository.GetGrobAgentsAsync();
+
+            if(grobTask != null)
+            {
+                allAgents = allAgents.Where(a => Int32.Parse(a.Information.AvailableMemory) > grobTask.RequiredMemory).ToList();
+            }
+
+            if(allAgents == null)
+            {
+                return null;
+            }
+            
             float minUsage = 100;
             var selectedAgent = new GrobAgent();
 

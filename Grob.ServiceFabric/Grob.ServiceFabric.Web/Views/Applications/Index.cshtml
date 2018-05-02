@@ -11,7 +11,7 @@
     <div>
         <h2>Applications</h2>
         <div>
-            <table class="striped">
+            <table class="striped centered">
                 <thead>
                     <tr>
                         <th>Created</th>
@@ -23,9 +23,9 @@
                     @foreach (Grob.Entities.Docker.Application application in Model.Applications)
                     {
                         <tr>
-                            <th>@application.Created</th>
-                            <th>@application.Name</th>
-                            <th>@application.Size</th>
+                            <td>@application.Created</td>
+                            <td>@application.Name</td>
+                            <td>@application.Size MB</td>
                         </tr>
                     }
                 </tbody>

@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <div id="test1" class="col s12">
-                <table class="striped">
+                <table class="striped centered">
                     <thead>
                         <tr>
                             <th>Created</th>
@@ -28,31 +28,31 @@
                             <th>Application name</th>
                             <th>Last Run</th>
                             <th>Next Run</th>
-                            <th></th>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (Grob.Entities.Grob.GrobTask task in Model.Tasks.Where(t => t.ContainerType == Grob.Entities.Grob.ContainerTypeEnum.Executable))
                         {
                             <tr>
-                                <th>@Html.DisplayFor(m => task.CreationTime)</th>
-                                <th>@Html.DisplayFor(m => task.Name)</th>
-                                <th>@Html.DisplayFor(m => task.ApplicationName)</th>
-                                <th>@Html.DisplayFor(m => task.LastRunTime)</th>
-                                <th>@Html.DisplayFor(m => task.NextRunTime)</th>
-                                <th>
+                                <td>@Html.DisplayFor(m => task.CreationTime)</td>
+                                <td>@Html.ActionLink(task.Name, "Details", "task", routeValues: new { taskName = task.Name })</td>
+                                <td>@Html.DisplayFor(m => task.ApplicationName)</td>
+                                <td>@Html.DisplayFor(m => task.LastRunTime)</td>
+                                <td>@Html.DisplayFor(m => task.NextRunTime)</td>
+                                <td>
                                     @using (Html.BeginForm(actionName: "delete", controllerName: "task", routeValues: new { taskId = task.Id }))
                                     {
                                         <input type="submit" class="btn red" value="Delete" />
                                     }
-                                </th>
+                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
             <div id="test2" class="col s12">
-                <table>
+                <table class="striped centered">
                     <thead>
                         <tr>
                             <th>Created</th>
@@ -67,23 +67,23 @@
                     </thead>
                     <tbody>
                         @foreach (Grob.Entities.Grob.GrobTask task in Model.Tasks.Where(t => t.ContainerType == Grob.Entities.Grob.ContainerTypeEnum.WebApplication))
-                        {
-                        <tr>
-                            <th>@Html.DisplayFor(m => task.CreationTime)</th>
-                            <th>@Html.DisplayFor(m => task.Name)</th>
-                            <th>@Html.DisplayFor(m => task.ApplicationName)</th>
-                            <th>@Html.DisplayFor(m => task.LastRunTime)</th>
-                            <th>@Html.DisplayFor(m => task.Status)</th>
-                            <th>@Html.DisplayFor(m => task.ScheduleType)</th>
-                            <th>@Html.DisplayFor(m => task.PublicUrl)</th>
-                            <th>
-                                @using (Html.BeginForm(actionName: "delete", controllerName: "task", routeValues: new { taskId = task.Id }))
         {
-                        <input type="submit" class="btn red" value="Delete" />
+                <tr>
+                    <td>@Html.DisplayFor(m => task.CreationTime)</td>
+                    <td>@Html.ActionLink(task.Name, "Details", "task", routeValues: new { taskName = task.Name })</td>
+                    <td>@Html.DisplayFor(m => task.ApplicationName)</td>
+                    <td>@Html.DisplayFor(m => task.LastRunTime)</td>
+                    <td>@Html.DisplayFor(m => task.Status)</td>
+                    <td>@Html.DisplayFor(m => task.ScheduleType)</td>
+                    <td>@Html.DisplayFor(m => task.PublicUrl)</td>
+                    <td>
+                        @using (Html.BeginForm(actionName: "delete", controllerName: "task", routeValues: new { taskId = task.Id }))
+        {
+                <input type="submit" class="btn red" value="Delete" />
 }
-                            </th>
-                        </tr>
-                        }
+                    </td>
+                </tr>
+}
                     </tbody>
                 </table>
             </div>

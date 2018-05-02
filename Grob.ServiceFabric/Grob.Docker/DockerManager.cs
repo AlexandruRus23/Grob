@@ -163,7 +163,7 @@ namespace Grob.Docker
 
                 foreach (var image in images)
                 {
-                    result.Add(new Application(image.RepoTags.FirstOrDefault(), image.Created, image.ID, image.Containers, image.Size));
+                    result.Add(new Application(image.RepoTags.FirstOrDefault(), image.Created, image.ID, image.Containers, image.Size/1048576));
                 }
             }
             catch (Exception e)
@@ -210,17 +210,32 @@ namespace Grob.Docker
         {
             var containerName = GetContainerName(grobTask);
             var container = ListContainers().Result.Where(c => c.Name == containerName).FirstOrDefault();
+            //var since = DateTime.Parse(grobTask.LastRunTime).ToString("yyyy-MM-ddTHH:mm:ss");
+            var since = $"{DateTime.Now.Subtract(DateTime.Parse(grobTask.LastRunTime)).Minutes + 1}m";
 
-            var logs = await _dockerClient.Containers.GetContainerLogsAsync(container.Id, new ContainerLogsParameters()
+            try
             {
-                Since = grobTask.LastRunTime.ToString()
-            });
+                var logs = await _dockerClient.Containers.GetContainerLogsAsync(container.Id, new ContainerLogsParameters()
+                {
+                    ShowStdout = true,
+                    Timestamps = true
+                });
 
-            using (var streamReader = new StreamReader(logs))
-            {
-                var content = streamReader.ReadToEnd();
-                return content;
+                using (var streamReader = new StreamReader(logs))
+                {
+                    var content = streamReader.ReadToEnd();
+                    return StripUnicodeCharactersFromString(content);
+                }
             }
+            catch(Exception e)
+            {
+                return string.Empty;
+            }
+        }
+
+        private String StripUnicodeCharactersFromString(string inputValue)
+        {
+            return inputValue.Replace("\u0000", string.Empty).Replace("\u0001", string.Empty).Replace("\u000e", string.Empty).Replace("\0-", string.Empty);
         }
     }
 }

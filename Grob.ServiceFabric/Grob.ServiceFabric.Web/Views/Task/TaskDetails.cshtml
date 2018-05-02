@@ -7,47 +7,48 @@
 <h2>@Model.GrobTask.Name</h2>
 
 <div>
-    <table>
+    <table class="striped centered">
         <tbody>
             <tr>
-                <th>Name</th>
-                <th>@Model.GrobTask.Name</th>
+                <td>Name</td>
+                <td>@Model.GrobTask.Name</td>
             </tr>
             <tr>
-                <th>ApplicationName</th>
-                <th>@Model.GrobTask.ApplicationName</th>
+                <td>Application name</td>
+                <td>@Model.GrobTask.ApplicationName</td>
             </tr>
             <tr>
-                <th>Schedule type</th>
-                <th>@Model.GrobTask.ScheduleType</th>
+                <td>Schedule type</td>
+                <td>@Model.GrobTask.ScheduleType</td>
             </tr>
             <tr>
-                <th>Container type</th>
-                <th>@Model.GrobTask.ContainerType</th>
+                <td>Container type</td>
+                <td>@Model.GrobTask.ContainerType</td>
             </tr>
             <tr>
-                <th>Last run</th>
-                <th>@Model.GrobTask.LastRunTime</th>
+                <td>Last run</td>
+                <td>@Model.GrobTask.LastRunTime</td>
             </tr>
             <tr>
-                <th>Next run</th>
-                <th>@Model.GrobTask.NextRunTime</th>
+                <td>Next run</td>
+                <td>@Model.GrobTask.NextRunTime</td>
             </tr>
             <tr>
-                <th>Status</th>
-                <th>@Model.GrobTask.Status</th>
+                <td>Status</td>
+                <td>@Model.GrobTask.Status</td>
             </tr>
             <tr>
-                <th>Private url</th>
-                <th>@Model.GrobTask.PrivateUrl</th>
+                <td>Private url</td>
+                <td>@Model.GrobTask.PrivateUrl</td>
             </tr>
             <tr>
-                <th>Public url</th>
-                <th>@Model.GrobTask.PublicUrl</th>
+                <td>Public url</td>
+                <td>@Model.GrobTask.PublicUrl</td>
             </tr>
         </tbody>
     </table>
-    <table>
+    <h4>Containers</h4>
+    <table class="striped centered">
         <thead>
             <tr>
                 <th>Name</th>
@@ -62,22 +63,23 @@
             @foreach (var container in Model.GrobTask.Containers)
             {
                 <tr>
-                    <th>@container.Name</th>
-                    <th>@container.Command</th>
-                    <th>@container.Created</th>
-                    <th>@container.Image</th>
-                    <th>@container.Status</th>
-                    <th>@container.AgentName</th>
+                    <td>@container.Name</td>
+                    <td>@container.Command</td>
+                    <td>@container.Created</td>
+                    <td>@container.Image</td>
+                    <td>@container.Status</td>
+                    <td>@container.AgentName</td>
                 </tr>
             }
         </tbody>
     </table>
-    <table>
+    <h4>Runs</h4>
+    <table class="striped centered">
         <thead>
             <tr>
                 <th>Timestamp</th>
                 <th>Agent</th>
-                <th>Logs</th>
+                @*<th>Logs</th>*@
                 <th>Success</th>
             </tr>
         </thead>
@@ -85,16 +87,16 @@
             @foreach (var log in Model.GrobTask.Logs)
             {
                 <tr>
-                    <th>@log.Timestamp</th>
-                    <th>@log.Agent</th>
-                    <th>@log.Logs</th>
+                    <td>@log.Timestamp</td>
+                    <td>@log.Agent</td>
+                    @*<th>@log.Logs</th>*@
                     @if (log.WasSuccessful)
                     {
-                        <th>Yes</th>
+                        <td>Yes</td>
                     }
                     else
                     {
-                        <th>No</th>
+                        <td>No</td>
                     }
 
                 </tr>

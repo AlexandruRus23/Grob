@@ -21,25 +21,25 @@
             @foreach (Grob.Agent.Models.GrobAgent agent in Model.GrobAgents)
             {
                 <tr>
-                    <th>@Html.DisplayFor(m => agent.Name)</th>
-                    <th>@Html.DisplayFor(m => agent.Uri)</th>
-                    <th>@Html.DisplayFor(m => agent.Information.CpuUsage)%</th>
-                    <th>@Html.DisplayFor(m => agent.Information.AvailableMemory) MB</th>
+                    <td>@Html.DisplayFor(m => agent.Name)</td>
+                    <td>@Html.DisplayFor(m => agent.Uri)</td>
+                    <td>@Html.DisplayFor(m => agent.Information.CpuUsage)%</td>
+                    <td>@Html.DisplayFor(m => agent.Information.AvailableMemory) MB</td>
                     @if (agent.Information.IsDockerEngineRunning)
                     {
-                        <th><i class="small material-icons">check</i></th>
+                        <td><i class="small material-icons">check</i></td>
                     }
                     else
                     {
-                        <th><i class="small material-icons">close</i></th>
+                        <td><i class="small material-icons">close</i></td>
                     }
                     @if (agent.Information.IsDockerForWindowsServiceRunning)
                     {
-                        <th><i class="small material-icons">check</i></th>
+                        <td><i class="small material-icons">check</i></td>
                     }
                     else
                     {
-                        <th><i class="small material-icons">close</i></th>
+                        <td><i class="small material-icons">close</i></td>
                     }
                 </tr>
             }

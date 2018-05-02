@@ -25,6 +25,7 @@ namespace Grob.Entities.Grob
         public string PublicUrl { get; set; }
         public List<Container> Containers { get; set; }
         public List<GrobTaskLogs> Logs { get; set; }
+        public int RequiredMemory { get; set; }
 
         public GrobTask()
         {
@@ -32,7 +33,7 @@ namespace Grob.Entities.Grob
             Logs = new List<GrobTaskLogs>();
         }
 
-        public GrobTask(string name, string applicationName, ScheduleTypesEnum scheduleType, string scheduleInfo, ContainerTypeEnum containerType) : this()
+        public GrobTask(string name, string applicationName, ScheduleTypesEnum scheduleType, string scheduleInfo, ContainerTypeEnum containerType, int requiredMemory) : this()
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -43,6 +44,7 @@ namespace Grob.Entities.Grob
             LastRunTime = "-1";
             NextRunTime = "-1";
             ContainerType = containerType;
+            RequiredMemory = requiredMemory;
         }
     }
 }

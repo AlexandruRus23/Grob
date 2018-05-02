@@ -94,7 +94,10 @@ namespace Grob.Agent.Models
         public Task<string> GetLogsForTaskAsync(GrobTask task)
         {
             var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + "containers/logs");
+            var request = new HttpRequestMessage(HttpMethod.Post, Uri.ToString() + "containers/logs")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(task), Encoding.UTF8, "application/json")
+            };
             var result = client.SendAsync(request).Result;
             return result.Content.ReadAsStringAsync();
         }

@@ -58,18 +58,11 @@ namespace Grob.ServiceFabric.Scheduler
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            //while (true)
-            //{
-            //    var task = new GrobTask("hello-world");
-
-            //    await _jobRepository.AddTask(task);
-            //    await _jobRepository.AddTask(task);
-            //    await _jobRepository.AddTask(task);
-                
-            //    await _grobMaster.RunTask(task);
-
-            //    await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
-            //}            
+            // register old tasks
+            foreach(var task in await _taskRepository.GetTasks())
+            {
+                await CreateTaskAsync(task);
+            }
         }
 
         public async Task<List<GrobTask>> GetTasksAsync()
