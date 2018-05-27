@@ -29,7 +29,7 @@ namespace DemoWebApi.Controllers
         [HttpPost]
         public ActionResult Post([FromBody]User user)
         {
-            var response = $"Hello {user.Username}";
+            var response = $"Hello {user.Username} at {DateTime.Now}!";
             return Ok(response);
         }
 

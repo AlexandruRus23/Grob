@@ -21,7 +21,7 @@ namespace Grob.ServiceFabric.Agent.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Application>> GetImages()
+        public async Task<List<Application>> GetApplications()
         {
             return await _dockerManager.ListImagesAsync();
         }
